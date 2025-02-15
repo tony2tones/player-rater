@@ -11,9 +11,22 @@ import {  FormGroup } from '@angular/forms';
 })
 export class LoginComponent {
   signIn = new FormGroup({
-    email: new FormControl(''),
-    password: new FormControl(new FormControl(''), Validators.required),
+    email: new FormControl('', [Validators.required, Validators.email]),
+    password: new FormControl('', Validators.required),
   });
 
+  submit() {
+    if(this.signIn.valid) {
+      console.log('submitted and value');
+      console.log(this.signIn.value);
+    } 
+  }
 
+
+  get email() {
+    return this.signIn.get('email');
+  }
+  get password() {
+    return this.signIn.get('password');
+  }
 }
