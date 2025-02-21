@@ -1,5 +1,9 @@
 <nav class="flex items-center justify-between flex-wrap bg-blue-500 p-6">
     <ul>
       <li><a routerLink="/login" routerLinkActive="active" ariaCurrentWhenActive="page" class="hover:cursor-pointer">Login</a></li>
+      <li><a routerLink="/register" routerLinkActive="active" ariaCurrentWhenActive="page" class="hover:cursor-pointer">Register</a></li>
     </ul>
+    <div>
+      <span class="font-semibold text-lg text-white" (click)="logout()">Logout</span>
+    </div>
   </nav>
