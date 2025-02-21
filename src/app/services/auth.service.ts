@@ -1,9 +1,9 @@
-import { inject, Injectable, Signal } from '@angular/core';
-import { Auth, signInWithEmailAndPassword, user, User, onAuthStateChanged } from '@angular/fire/auth';
+import { inject, Injectable } from '@angular/core';
+import { Auth, signInWithEmailAndPassword, onAuthStateChanged, updateProfile } from '@angular/fire/auth';
 import { Router } from '@angular/router';
-import { toSignal } from '@angular/core/rxjs-interop';
-import { catchError } from 'rxjs/operators';
-import { of } from 'rxjs';
+import { from, Observable, of } from 'rxjs';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
+
 
 @Injectable({
   providedIn: 'root',
@@ -13,7 +13,13 @@ export class AuthService {
   private router = inject(Router);
   
   // Signal to hold the authenticated user
-  public user: Signal<User | null |undefined> = toSignal(user(this.auth));
+   register(email:string, username:string, password:string): Observable<void> {
+ const promise = createUserWithEmailAndPassword(this.auth, email, password)
+ .then((response) => {
+   return updateProfile(response.user, {displayName: username});
+  });
+  return from(promise).pipe();
+}
 
   constructor() {
     // Optionally, listen to authentication state changes
@@ -35,6 +41,7 @@ export class AuthService {
       // After successful login, you can route to another page (e.g., dashboard)
       this.router.navigate(['/dashboard']); // Change to your desired route
       console.log('User logged in successfully:', userCredential.user);
+      return null;
     } catch (error) {
       // Handle login errors here (e.g., incorrect credentials)
       console.error('Login failed:', error);

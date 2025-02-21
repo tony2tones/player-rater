@@ -1,7 +1,9 @@
-import { Component } from '@angular/core';
-import {FormControl,ReactiveFormsModule, Validators} from '@angular/forms';
+import { Component, inject } from '@angular/core';
+import {FormBuilder, FormControl,ReactiveFormsModule, Validators} from '@angular/forms';
 import {  FormGroup } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
+import { Router } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
     selector: 'app-login',
@@ -11,29 +13,32 @@ import { AuthService } from '../../services/auth.service';
     styleUrl: './login.component.css'
 })
 export class LoginComponent {
-  signIn = new FormGroup({
-    email: new FormControl('', [Validators.required, Validators.email]),
-    password: new FormControl('', Validators.required),
+  fb = inject(FormBuilder);
+  http = inject(HttpClient);
+  router = inject(Router)
+  authService = inject(AuthService)
+
+  signInForm = this.fb.group({
+    email: ['', Validators.required, Validators.email],
+    password: ['', Validators.required],
   });
 
-  constructor(private authService: AuthService) {}
-
   submit() {
-    if(this.signIn.valid) {
-      this.authService.loginWithEmailAndPassword(this.signIn.value.email as string, this.signIn.value.password as string).then(
-        (error) => {
+    if(this.signInForm.valid) {
+      this.authService.loginWithEmailAndPassword(this.signInForm.value.email as string, this.signInForm.value.password as string).then(
+        (error: any) => {
           console.log(error);
         })
       console.log('submitted and value');
-      console.log(this.signIn.value);
+      console.log(this.signInForm.value);
     } 
   }
 
 
   get email() {
-    return this.signIn.get('email');
+    return this.signInForm.get('email');
   }
   get password() {
-    return this.signIn.get('password');
+    return this.signInForm.get('password');
   }
 }
