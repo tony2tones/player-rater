@@ -21,6 +21,11 @@ export class AuthService {
   return from(promise).pipe();
 }
 
+ login(email: string, password: string): Observable<void> {
+    const promise = signInWithEmailAndPassword(this.auth, email, password).then(() => {})
+    return from(promise)
+  }
+
   constructor() {
     // Optionally, listen to authentication state changes
     onAuthStateChanged(this.auth, (user) => {
@@ -35,20 +40,7 @@ export class AuthService {
   }
 
   // Login function with email and password
-  public async loginWithEmailAndPassword(email: string, password: string) {
-    try {
-      const userCredential = await signInWithEmailAndPassword(this.auth, email, password);
-      // After successful login, you can route to another page (e.g., dashboard)
-      this.router.navigate(['/dashboard']); // Change to your desired route
-      console.log('User logged in successfully:', userCredential.user);
-      return null;
-    } catch (error) {
-      // Handle login errors here (e.g., incorrect credentials)
-      console.error('Login failed:', error);
-      // Return an observable with the error so the caller can handle it
-      return of(error);
-    }
-  }
+ 
 
   // Logout function
   public async logout() {

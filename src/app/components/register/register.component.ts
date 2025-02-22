@@ -22,11 +22,18 @@ registerForm = this.fb.group({
   password: ['', Validators.required],
 })
 
+errorMessage: string | null = null;
+
 register() {
   const rawForm = this.registerForm.getRawValue();
-  this.authService.register(rawForm.email as string, rawForm.username as string,rawForm.password as string).subscribe(() => {
+  this.authService.register(rawForm.email as string, rawForm.username as string,rawForm.password as string).subscribe({
+    next:() => {
     this.router.navigate(['/dashboard']);
-  });
+  },
+error: (error) => {
+  console.log(error);
+  this.errorMessage = error.message;
+}});
   console.log('submitted and value');
   console.log(this.registerForm.value);
 }
