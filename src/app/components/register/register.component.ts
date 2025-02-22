@@ -30,4 +30,8 @@ register() {
   console.log('submitted and value');
   console.log(this.registerForm.value);
 }
+
+goToLogin() {
+  this.router.navigate(['/login']);
+}
 }
