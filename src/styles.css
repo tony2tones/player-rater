@@ -1,2 +1,6 @@
 /* You can add global styles to this file, and also import other style files */
 @import "tailwindcss";
+
+button {
+  @apply w-full p-4 rounded-md bg-blue-400 hover:bg-blue-500 hover:cursor-pointer;
+}

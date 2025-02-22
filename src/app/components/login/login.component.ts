@@ -1,6 +1,5 @@
 import { Component, inject } from '@angular/core';
-import {FormBuilder, FormControl,ReactiveFormsModule, Validators} from '@angular/forms';
-import {  FormGroup } from '@angular/forms';
+import {FormBuilder,ReactiveFormsModule, Validators} from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
@@ -18,22 +17,25 @@ export class LoginComponent {
   router = inject(Router)
   authService = inject(AuthService)
 
-  signInForm = this.fb.group({
-    email: ['', Validators.required, Validators.email],
+  signInForm = this.fb.nonNullable.group({
+    email: ['', [Validators.required, Validators.email]],
     password: ['', Validators.required],
   });
 
   submit() {
+    const rawForm = this.signInForm.getRawValue();
     if(this.signInForm.valid) {
-      this.authService.loginWithEmailAndPassword(this.signInForm.value.email as string, this.signInForm.value.password as string).then(
-        (error: any) => {
+      this.authService.login(rawForm.email as string, rawForm.password as string)
+      .subscribe({
+        next: () => {
+          console.log('Login successful');
+          this.router.navigate(['/dashboard']);
+        },
+        error: (error: any) => {
           console.log(error);
-        })
-      console.log('submitted and value');
-      console.log(this.signInForm.value);
+        }})
     } 
   }
-
 
   get email() {
     return this.signInForm.get('email');

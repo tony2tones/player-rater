@@ -1,11 +1,25 @@
-<h1>Register</h1>
-
-<form [formGroup]="registerForm" (ngSubmit)="register()">
+<section class="flex flex-col items-center justify-center min-h-screen bg-gray-800 ">
+  
+  <form [formGroup]="registerForm" (ngSubmit)="register()" class="bg-gray-700 text-white p-8 rounded-lg shadow-lg w-full max-w-md space-y-4">
+  <h1 class="">Register</h1>
+  <div class="flex flex-col">
   <label for="username">Username: *</label>
-  <input id='username' type="username" placeholder="Enter username" formControlName="username">
+  <input class="border border-gray-400 p-1 rounded-md" id='username' type="username" placeholder="Enter username" formControlName="username">
+</div>
+<div class="flex flex-col">
   <label for="email">Email: *</label>
-  <input id='email' type="email" placeholder="Enter email" formControlName="email">
+  <input class="border border-gray-400 p-1 rounded-md" id='email' type="email" placeholder="Enter email" formControlName="email">
+</div>
+<div class="flex flex-col">
   <label for="password">Password: *</label>
-  <input id='password'type="password" placeholder="Enter password" formControlName="password">
-  <button type="submit">Register</button>
+  <input class="border border-gray-400 p-1 rounded-md" id='password'type="password" placeholder="Enter password" formControlName="password">
+  </div>
+  <p>{{errorMessage}}</p>
+  
+  <div class="flex gap-2">
+    <button class="button" type="submit">Register</button>
+    <button class="button" type="button" (click)="goToLogin()">Sign in</button>
+  </div>
+  
 </form>
+</section>

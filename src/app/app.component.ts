@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import {  RouterOutlet } from '@angular/router';
+import { Component, inject } from '@angular/core';
+import {  Router, RouterOutlet } from '@angular/router';
 import { NavbarComponent } from "./components/navbar/navbar.component";
 
 @Component({
@@ -10,5 +10,8 @@ import { NavbarComponent } from "./components/navbar/navbar.component";
     styleUrl: './app.component.css'
 })
 export class AppComponent {
+  router = inject(Router);
   title = 'player-rater';
+
+  
 }
