@@ -10,7 +10,6 @@ import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 export class NavbarComponent {
     constructor(private router: Router) {}
     logout() {
-        console.log('logout');
-        this.router.navigateByUrl('/login');
+        this.router.navigateByUrl('/auth/login');
     }
 }

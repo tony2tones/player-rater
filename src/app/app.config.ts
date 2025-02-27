@@ -1,4 +1,4 @@
-import { ApplicationConfig, importProvidersFrom, provideZoneChangeDetection } from '@angular/core';
+import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { provideFirebaseApp, initializeApp } from '@angular/fire/app';
 import { getFirestore, provideFirestore } from '@angular/fire/firestore';
@@ -15,5 +15,5 @@ export const appConfig: ApplicationConfig = {
       provideHttpClient(), 
       provideAuth(() => getAuth()),
       provideFirestore(() => getFirestore()),
-  ]
+    ]
 };

@@ -1,9 +1,10 @@
 import { inject, Injectable } from '@angular/core';
 import { Auth, signInWithEmailAndPassword, onAuthStateChanged, updateProfile } from '@angular/fire/auth';
 import { Router } from '@angular/router';
-import { from, Observable, of } from 'rxjs';
+import { from, Observable, of, tap } from 'rxjs';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 
+const HAS_AUTHED_STORAGE_KEY = btoa('hasAuthed');
 
 @Injectable({
   providedIn: 'root',
@@ -23,33 +24,44 @@ export class AuthService {
 
  login(email: string, password: string): Observable<void> {
     const promise = signInWithEmailAndPassword(this.auth, email, password).then(() => {})
-    return from(promise)
+    return from(promise).pipe(tap({
+      next: () => localStorage.setItem(HAS_AUTHED_STORAGE_KEY, 'true'),
+    }))
   }
 
-  constructor() {
-    // Optionally, listen to authentication state changes
-    onAuthStateChanged(this.auth, (user) => {
-      if (user) {
-        // You can handle the user state change here if needed
-        console.log('User logged in:', user);
-      } else {
-        // Handle user logout
-        console.log('User logged out');
-      }
-    });
+  
+  isLoggedIn(): Observable<boolean> {
+    return new Observable<boolean>((observer) => {
+      onAuthStateChanged(this.auth, (user) => {
+        observer.next(!!user);
+        observer.complete();
+      })
+    })
   }
 
-  // Login function with email and password
- 
+  terminateSessionAndRedirect(): void {
+    // clear state on logout
+    this.clearAuthStatus();
+    // this.router.navigate(['auth', 'login']);
+  }
 
   // Logout function
   public async logout() {
     try {
       await this.auth.signOut();
-      this.router.navigate(['/login']); // Navigate to login page on logout
+      this.terminateSessionAndRedirect();
+      this.router.navigate(['/auth/login']); // Navigate to login page on logout
       console.log('User logged out');
     } catch (error) {
       console.error('Logout failed:', error);
     }
+  }
+
+  clearAuthStatus() {
+    localStorage.removeItem(HAS_AUTHED_STORAGE_KEY);
+  }
+
+  hasAuthed(): Observable<string | null> {
+    return of(localStorage.getItem(HAS_AUTHED_STORAGE_KEY));
   }
 }
