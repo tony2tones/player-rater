@@ -4,3 +4,7 @@
 button {
   @apply border rounded-md text-amber-50 border-slate-400 p-2 hover:cursor-pointer hover:bg-slate-600 transition duration-700 ease-in-out 
 }
+
+input {
+  @apply border rounded-md text-slate-200 p-1
+}
