@@ -1,5 +1,4 @@
 import { Component, inject } from '@angular/core';
-import { Auth } from '@angular/fire/auth';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
@@ -26,5 +25,12 @@ onSubmit() {
   this.auth.login(rawForm.email as string, rawForm.password as string).subscribe(() => {
     this.router.navigate(['/']);
   })
+}
+
+get email() {
+  return this.loginForm.get('email');
+}
+get password() {
+  return this.loginForm.get('password');
 }
 }
