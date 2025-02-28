@@ -1,3 +1,7 @@
-<h1 class="text-3xl font-bold flex justify-center items-center hovercourse-pointer">
-  Hello world!
-</h1>
+<div>
+  <a routerLink="/auth/login">Login</a>
+  <a routerLink="/auth/register">Register</a>
+</div>
+<div><span (click)="logout()">Logout</span></div>
+
+<router-outlet />
