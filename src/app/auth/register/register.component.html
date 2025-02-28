@@ -1,11 +1,15 @@
-<form [formGroup]="registerForm">
+<section class="flex flex-col bg-slate-500 drop-shadow-lg shadow-slate-600 ">
+  <form class="flex-1 flex flex-col gap-1 border rounded-md min-w-96 text-amber-50 border-slate-400 p-4" [formGroup]="registerForm">
+    <h2 class="text-xl font-bold mb-2">Register</h2>
+  
   <label for="email">Email</label>
-  <input type="email" id="email" formControlName="email">
+  <input class="border rounded-md text-slate-200 p-1" type="email" id="email" formControlName="email">
 
   <label for="username">Username</label>
-  <input type="text" id="username" formControlName="username">
+  <input class="border rounded-md text-slate-200 p-1" type="text" id="username" formControlName="username">
   <label for="password">Password</label>
-  <input type="password" id="password" formControlName="password">
+  <input class="border rounded-md text-slate-200 p-1" type="password" id="password" formControlName="password">
   <button type="submit" (click)="onSubmit()">Register</button>
 
   </form>
+  </section>
