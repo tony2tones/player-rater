@@ -1,1 +1,13 @@
-<p>login works!</p>
+<section class=" flex flex-col">
+<form class="flex-1 flex flex-col" [formGroup]="loginForm">
+  <h2 class="text-xl font-bold mb-4">Login</h2>
+
+  <label for="email">Email</label>
+  <input type="email" id="email" formControlName="email">
+
+  <label for="password">Password</label>
+  <input type="password" id="password" formControlName="password">
+  <button type="submit" (click)="onSubmit()">Register</button>
+
+  </form>
+</section>
