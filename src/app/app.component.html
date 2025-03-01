@@ -1,5 +1,12 @@
-@if (router.url.includes('/dashboard')) {
-  <app-navbar />
-}
-
+<div class="flex flex-col h-screen bg-slate-600">
+<div class="flex justify-between p-4 bg-slate-800 text-amber-50 hover:cursor-pointer">
+<div class="flex gap-3">
+  <a class="hover:text-slate-500" routerLink="/auth/login">Login</a>
+  <a class="hover:text-slate-500" routerLink="/auth/register">Register</a>
+</div>
+<div><span (click)="logout()">Logout</span></div>
+</div>
+<div class="flex-1 flex items-center justify-center overflow-hidden">
 <router-outlet />
+</div>
+</div>

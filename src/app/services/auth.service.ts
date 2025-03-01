@@ -1,55 +1,46 @@
-import { inject, Injectable } from '@angular/core';
-import { Auth, signInWithEmailAndPassword, onAuthStateChanged, updateProfile } from '@angular/fire/auth';
-import { Router } from '@angular/router';
-import { from, Observable, of } from 'rxjs';
-import { createUserWithEmailAndPassword } from 'firebase/auth';
-
+import { inject, Injectable } from "@angular/core";
+import { Auth, createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile, User } from "@angular/fire/auth";
+import { Router } from "@angular/router";
+import { from, Observable, of } from "rxjs";
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
-export class AuthService {
-  private auth = inject(Auth);
-  private router = inject(Router);
-  
-  // Signal to hold the authenticated user
-   register(email:string, username:string, password:string): Observable<void> {
- const promise = createUserWithEmailAndPassword(this.auth, email, password)
- .then((response) => {
-   return updateProfile(response.user, {displayName: username});
-  });
-  return from(promise).pipe();
-}
 
- login(email: string, password: string): Observable<void> {
-    const promise = signInWithEmailAndPassword(this.auth, email, password).then(() => {})
+export class AuthService {
+  firebaseAuth = inject(Auth)
+  router = inject(Router)
+
+  register(email:string, username:string, password:string): Observable<void> {
+    const promise = createUserWithEmailAndPassword(this.firebaseAuth, email, password)
+    .then((response) => {
+      return updateProfile(response.user, {displayName: username});
+     });
+     return from(promise);
+   }
+
+   login(email: string, password: string): Observable<void> {
+    const promise = signInWithEmailAndPassword(this.firebaseAuth, email, password).then(() => {})
     return from(promise)
   }
 
-  constructor() {
-    // Optionally, listen to authentication state changes
-    onAuthStateChanged(this.auth, (user) => {
-      if (user) {
-        // You can handle the user state change here if needed
-        console.log('User logged in:', user);
-      } else {
-        // Handle user logout
-        console.log('User logged out');
-      }
-    });
+  logout() {
+    this.firebaseAuth.signOut();
+    this.router.navigate(['/auth/login']);
   }
 
-  // Login function with email and password
- 
-
-  // Logout function
-  public async logout() {
-    try {
-      await this.auth.signOut();
-      this.router.navigate(['/login']); // Navigate to login page on logout
-      console.log('User logged out');
-    } catch (error) {
-      console.error('Logout failed:', error);
-    }
+  isLoggedIn(): Observable<boolean> {
+    return new Observable((observer) => {
+      this.firebaseAuth.onAuthStateChanged((user) => {
+          observer.next(!!user);
+        observer.complete();
+      })
+    })
   }
+
+  getCurrentUser():Observable<any> {
+    return of(this.firebaseAuth.currentUser);
+  }
+
+
 }
