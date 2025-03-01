@@ -17,9 +17,7 @@ profileId: string | null = null;
 displayName: string | null = null;
 
 constructor() {
-  console.log('is this happening?', this.params.snapshot.paramMap.get('profileId'));
   this.profileId = this.params.snapshot.paramMap.get('profileId');
-  console.log('is this happening?', this.firebaseAuth.currentUser?.displayName);
   const displayNameResult = this.firebaseAuth.currentUser?.displayName;
   if(displayNameResult) {
     this.displayName = displayNameResult;
@@ -39,6 +37,7 @@ createProfileForm = this.fb.group({
   physical: [''],
   mental: [''],
   transport: [''],
+  photoUrl: [''],
 })
 
 ngOnInit() {
