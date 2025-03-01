@@ -1,13 +1,13 @@
 import { inject, Injectable, Injector } from '@angular/core';
 import { Auth } from '@angular/fire/auth';
-import { ActivatedRouteSnapshot, Router, RouterStateSnapshot } from '@angular/router';
+import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot } from '@angular/router';
 import { AuthService } from './auth.service';
-import { map, Observable, take } from 'rxjs';
+import { filter, map, Observable, take } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
-export class AuthGuardService {
+export class AuthGuardService implements CanActivate{
   private authService: AuthService;
 firebaseAuth = inject(Auth)
 router = inject(Router)
@@ -18,8 +18,14 @@ constructor(){
 
 canActivate(next:ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
   return this.authService.isLoggedIn().pipe(
+    filter((value => { 
+      console.log('whats in here', value);
+      
+      return value !== null
+    })),
     take(1),
     map((isLoggedIn: boolean) => {
+      console.log('Are they logged in? ',isLoggedIn)
       if(!isLoggedIn) {
         this.router.navigate(['/auth/login']);
         return false;
