@@ -9,7 +9,6 @@ import { map, Observable, take } from 'rxjs';
 })
 export class AuthGuardService {
   private authService: AuthService;
-  // authService = inject(AuthService);
 firebaseAuth = inject(Auth)
 router = inject(Router)
 injector = inject(Injector)
