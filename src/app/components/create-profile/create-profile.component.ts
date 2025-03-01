@@ -1,5 +1,7 @@
 import { Component, inject, Input } from '@angular/core';
+import { Auth } from '@angular/fire/auth';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-create-profile',
@@ -8,12 +10,24 @@ import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
   styleUrl: './create-profile.component.css'
 })
 export class CreateProfileComponent {
+  firebaseAuth = inject(Auth);
 fb = inject(FormBuilder);
-@Input() profileId: string | null = null;
-@Input() displayName: string | null = null;
+params = inject(ActivatedRoute);
+profileId: string | null = null;
+displayName: string | null = null;
+
+constructor() {
+  console.log('is this happening?', this.params.snapshot.paramMap.get('profileId'));
+  this.profileId = this.params.snapshot.paramMap.get('profileId');
+  console.log('is this happening?', this.firebaseAuth.currentUser?.displayName);
+  const displayNameResult = this.firebaseAuth.currentUser?.displayName;
+  if(displayNameResult) {
+    this.displayName = displayNameResult;
+  }
+}
 
 createProfileForm = this.fb.group({
-  displayName: [this.displayName],
+  displayName: [this.displayName ?? ''],
   location: [''],
   bio: [''],
   experience: [''],
@@ -27,8 +41,22 @@ createProfileForm = this.fb.group({
   transport: [''],
 })
 
+ngOnInit() {
+ this.createProfileForm.controls.displayName.patchValue(this.displayName ?? null);
+  
+}
+sFunctions() {
+  this.createProfileForm.controls.displayName.patchValue(this.displayName ?? null);
+  console.log(this.profileId);
+  console.log(this.displayName);
+}
+
 onSubmit() {
   const rawForm = this.createProfileForm.getRawValue();
   console.log(rawForm);
+  }
+
+  set applyDisplayName(value: string) {
+    this.displayName = value;
   }
 }
