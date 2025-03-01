@@ -1,5 +1,6 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { Auth } from '@angular/fire/auth';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-dashboard',
@@ -9,13 +10,18 @@ import { Auth } from '@angular/fire/auth';
 })
 export class DashboardComponent implements OnInit {
 firebaseAuth = inject(Auth);
+router = inject(Router);
 currentUserName:string|null = null;
 
 ngOnInit() {
-  const name = this.firebaseAuth.currentUser?.displayName;
+  const name = this.firebaseAuth.currentUser;
   if(name) {
     console.log(name);
-    this.currentUserName = name; 
+    this.currentUserName = name.displayName; 
   }
+}
+
+createProfile() {
+  this.router.navigate([`/create-profile/${this.firebaseAuth.currentUser?.uid}`]);
 }
 }

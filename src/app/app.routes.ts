@@ -4,6 +4,7 @@ import { RegisterComponent } from './auth/register/register.component';
 import { AppComponent } from './app.component';
 import { AuthGuardService } from './services/auth-guard.service';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
+import { CreateProfileComponent } from './components/create-profile/create-profile.component';
 
 export const routes: Routes = [
   {
@@ -15,6 +16,11 @@ export const routes: Routes = [
     path: 'dashboard',
     component: DashboardComponent,
     canActivate: [AuthGuardService],
+  },
+  {
+    path: 'create-profile/:profileId',
+    component: CreateProfileComponent,
+    canActivate:[AuthGuardService],
   },
 {
   path: 'auth/login',
