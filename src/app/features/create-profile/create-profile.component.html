@@ -1,63 +1,48 @@
-<section class="flex flex-col bg-slate-500 drop-shadow-lg shadow-slate-600 overflow-y-hidden sm:overflow-y-auto">
-  <div class="flex flex-col justify-center items-center">
-    <app-card containerClass="max-w-full sm:max-w-4xl md:min-w-4xl lg:min-w-4xl xl:min-w-4xl">
-      <h1>Create a profile</h1>
-      <form class="text-slate-900 border-slate-800 p-4" [formGroup]="createProfileForm">
-        <div class="grid gap-4 grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2">
-          <div class="flex flex-col">
-            <label for="displayName">Display Name</label>
-            <input class="input w-full" type="text" id="displayName" formControlName="displayName">
+@if(!isLoading && createProfileForm) {
+  <section class="flex flex-col bg-slate-500 drop-shadow-lg shadow-slate-600 overflow-y-hidden sm:overflow-y-auto">
+    <div class="flex flex-col justify-center items-center">
+      <app-card containerClass="max-w-full sm:max-w-4xl md:min-w-4xl lg:min-w-4xl xl:min-w-4xl">
+        <h1>Create a profile</h1>
+        <form class="text-slate-900 border-slate-800 p-4" [formGroup]="createProfileForm">
+          <div class="grid gap-4 grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2">
+            <div class="flex flex-col">
+              <label for="displayName">Display Name</label>
+              <input class="input w-full" type="text" id="displayName" formControlName="displayName">
+            </div>
+            <div class="flex flex-col">
+              <label for="location">Location</label>
+              <input class="input w-full" type="text" id="location" formControlName="location">
+            </div>
+            <div class="flex flex-col">
+              <label for="bio">Bio</label>
+              <input class="input w-full" type="text" id="bio" formControlName="bio">
+            </div>
+            <div class="flex flex-col pb-3.5">
+              <label for="transport">Transport</label>
+              <input class="input w-full" type="text" id="transport" formControlName="transport">
+            </div>
+            @for(skill of skillsList; track skill) {
+              <div formGroupName="skills">
+              <div class="flex flex-col">
+              <label for={{skill}}> {{skill}}</label>
+              <ng-select class="custom" type="number" formControlName={{skill}} [items]="ratingOptions" min="1" max="10" [id]="skill"
+              ></ng-select>
+            </div>
           </div>
-          <div class="flex flex-col">
-            <label for="location">Location</label>
-            <input class="input w-full" type="text" id="location" formControlName="location">
+            } 
+            <div class="col-span-full pt-4">
+              <button class="button w-full" type="submit" (click)="onSubmit()">Create</button>
+            </div>
           </div>
-          <div class="flex flex-col">
-            <label for="bio">Bio</label>
-            <input class="input w-full" type="text" id="bio" formControlName="bio">
-          </div>
-          <div class="flex flex-col">
-            <label for="experience">Experience</label>
-            <input class="input w-full" type="text" id="experience" formControlName="experience">
-          </div>
-        
-          <div class="flex flex-col">
-            <label for="speed">Speed</label>
-            <input class="input w-full" type="text" id="speed" formControlName="speed">
-          </div>
-          <div class="flex flex-col">
-            <label for="shooting">Shooting</label>
-            <input class="input w-full" type="text" id="shooting" formControlName="shooting">
-          </div>
-          <div class="flex flex-col">
-            <label for="passing">Passing</label>
-            <input class="input w-full" type="text" id="passing" formControlName="passing">
-          </div>
-          <div class="flex flex-col">
-            <label for="defending">Defending</label>
-            <input class="input w-full" type="text" id="defending" formControlName="defending">
-          </div>
-          <div class="flex flex-col">
-            <label for="goalKeeper">Goal Keeper</label>
-            <input class="input w-full" type="text" id="goalKeeper" formControlName="goalKeeper">
-          </div>
-          <div class="flex flex-col">
-            <label for="physical">Physical</label>
-            <input class="input w-full" type="text" id="physical" formControlName="physical">
-          </div>
-          <div class="flex flex-col">
-            <label for="mental">Mental</label>
-            <input class="input w-full" type="text" id="mental" formControlName="mental">
-          </div>
-          <div class="flex flex-col pb-3.5">
-            <label for="transport">Transport</label>
-            <input class="input w-full" type="text" id="transport" formControlName="transport">
-          </div>
-          <div class="col-span-full pt-4">
-            <button class="button w-full" type="submit" (click)="onSubmit()">Create</button>
-          </div>
-        </div>
-      </form>
-    </app-card>
-  </div>
-</section>
+        </form>
+      </app-card>
+    </div>
+  </section>
+}
+
+
+@if(isLoading) {
+  <ng-template #loading>
+  <div>Loading...</div>
+</ng-template>
+}
