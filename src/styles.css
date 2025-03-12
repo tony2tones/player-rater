@@ -9,15 +9,16 @@ input {
   @apply border rounded-md p-1
 }
 
-custom  {
-    /* @apply block h-[2.375rem] w-full appearance-none rounded border  bg-[right_15px_center] bg-no-repeat py-1 pl-0.5 pr-3 text-lg  focus:border focus: focus:outline-none disabled:text-mosdark-primary; */
-  
-  /* .ng-select.custom .ng-select-container.ng-has-value { */
-     @apply h-auto  pr-12; 
-   /* } */
-  
-  /* .ng-select.custom .ng-select-container.ng-has-value:hover {
-    @apply cursor-pointer;
-  } */
-  
+.ng-dropdown-panel-items.scroll-host {
+  @apply bg-slate-50 rounded-md pl-2 hover:cursor-pointer
 }
+.ng-select {
+  @apply hover:cursor-pointer
+}
+.ng-input {
+  @apply hover:cursor-pointer p-1
+}
+.ng-option {
+  @apply hover:cursor-pointer hover:bg-slate-200
+}
+  

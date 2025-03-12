@@ -43,8 +43,6 @@ ratingOptions = [
   { value: 5, label: '5 - Good' },
   { value: 6, label: '6 - Very Good' },
   { value: 7, label: '7 - Excellent' },
-  { value: 8, label: '8 - Outstanding' },
-  { value: 9, label: '9 - Elite' },
 ]
 
 constructor() {
