@@ -1,5 +1,6 @@
-<section class="flex flex-col bg-slate-500 drop-shadow-lg shadow-slate-600 overflow-y-hidden scroll-auto">
+<section class="flex flex-col bg-slate-500 max-w-full drop-shadow-lg shadow-slate-600 overflow-y-hidden scroll-auto">
   <div class="flex flex-col justify-center items-center ">
+    <app-card containerClass="max-w-full">
     <h1>Create a profile</h1>
     <form class="grid gap-2 grid-cols-2 border rounded-md min-w-96 text-amber-50 border-slate-400 p-4" [formGroup]="createProfileForm">
       <div>
@@ -53,5 +54,6 @@
       </div>
       <button class="button" type="submit" (click)="onSubmit()">Create</button>
     </form>
+  </app-card>
   </div>
 </section>

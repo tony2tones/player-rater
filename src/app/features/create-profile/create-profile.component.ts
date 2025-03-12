@@ -1,16 +1,20 @@
-import { Component, inject, Input } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { Auth } from '@angular/fire/auth';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
+import { PlayerServiceService } from '../../services/player-service.service';
+import { CardComponent } from '../../components/card/card.component';
 
 @Component({
   selector: 'app-create-profile',
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, CardComponent],
+  standalone: true,
   templateUrl: './create-profile.component.html',
   styleUrl: './create-profile.component.css'
 })
 export class CreateProfileComponent {
   firebaseAuth = inject(Auth);
+  playerService = inject(PlayerServiceService);
 fb = inject(FormBuilder);
 params = inject(ActivatedRoute);
 profileId: string | null = null;
@@ -41,21 +45,17 @@ createProfileForm = this.fb.group({
 })
 
 ngOnInit() {
+  this.playerService.getPlayers().subscribe((players) => {
+    this.playerService.playerSig.set(players);
+  })
  this.createProfileForm.controls.displayName.patchValue(this.displayName ?? null);
   
-}
-sFunctions() {
-  this.createProfileForm.controls.displayName.patchValue(this.displayName ?? null);
-  console.log(this.profileId);
-  console.log(this.displayName);
 }
 
 onSubmit() {
   const rawForm = this.createProfileForm.getRawValue();
   console.log(rawForm);
+
   }
 
-  set applyDisplayName(value: string) {
-    this.displayName = value;
-  }
 }

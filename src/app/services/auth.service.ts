@@ -1,5 +1,5 @@
 import { inject, Injectable } from "@angular/core";
-import { Auth, createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile, User } from "@angular/fire/auth";
+import { Auth, createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile } from "@angular/fire/auth";
 import { Router } from "@angular/router";
 import { BehaviorSubject, from, Observable, of } from "rxjs";
 
@@ -9,6 +9,7 @@ import { BehaviorSubject, from, Observable, of } from "rxjs";
 
 export class AuthService {
   firebaseAuth = inject(Auth)
+  
   router = inject(Router)
 
 private isLoggedInSubject = new BehaviorSubject<boolean>(false);
@@ -34,19 +35,9 @@ private isLoggedInSubject = new BehaviorSubject<boolean>(false);
 
   logout = async() =>  {
     await this.firebaseAuth.signOut();
+    this.isLoggedInSubject.next(false);
     this.router.navigate(['/auth/login']);
   }
-
-  // isLoggedIn(): Observable<boolean> {
-  //   return new Observable((observer) => {
-  //     this.firebaseAuth.onAuthStateChanged((user) => {
-  //       console.log('does this even happen? USER ',user);
-  //         observer.next(!!user);
-  //       observer.complete();
-  //     })
-  //   })
-  // }
-
   isLoggedIn(): Observable<boolean> {
     return this.isLoggedInSubject.asObservable();
   }

@@ -1,10 +1,9 @@
 import { Routes } from '@angular/router';
 import { LoginComponent } from './auth/login/login.component';
 import { RegisterComponent } from './auth/register/register.component';
-import { AppComponent } from './app.component';
 import { AuthGuardService } from './services/auth-guard.service';
-import { DashboardComponent } from './components/dashboard/dashboard.component';
-import { CreateProfileComponent } from './components/create-profile/create-profile.component';
+import { DashboardComponent } from './features/dashboard/dashboard.component';
+import { CreateProfileComponent } from './features/create-profile/create-profile.component';
 
 export const routes: Routes = [
   {

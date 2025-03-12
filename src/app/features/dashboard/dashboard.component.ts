@@ -1,10 +1,11 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { Auth } from '@angular/fire/auth';
 import { Router } from '@angular/router';
+import { CardComponent } from '../../components/card/card.component';
 
 @Component({
   selector: 'app-dashboard',
-  imports: [],
+  imports: [CardComponent],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css'
 })
@@ -16,7 +17,6 @@ currentUserName:string|null = null;
 ngOnInit() {
   const name = this.firebaseAuth.currentUser;
   if(name) {
-    console.log(name);
     this.currentUserName = name.displayName; 
   }
 }
