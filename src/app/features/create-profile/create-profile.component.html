@@ -1,59 +1,63 @@
-<section class="flex flex-col bg-slate-500 max-w-full drop-shadow-lg shadow-slate-600 overflow-y-hidden scroll-auto">
-  <div class="flex flex-col justify-center items-center ">
-    <app-card containerClass="max-w-full">
-    <h1>Create a profile</h1>
-    <form class="grid gap-2 grid-cols-2 min-w-96 min-h-96 text-slate-900 border-slate-500 p-4" [formGroup]="createProfileForm">
-      <div class="flex flex-col">
-        <label for="displayName">Display Name</label>
-        <input class="input" type="text" id="displayName" formControlName="displayName">
-      </div>
-      <div class="flex flex-col">
-        <label for="location">Location</label>
-        <input class="input" type="text" id="location" formControlName="location">
-      </div>
-      <div class="flex flex-col">
-        <label for="bio">Bio</label>
-        <input class="input" type="text" id="bio" formControlName="bio">
-      </div>
-      <div class="flex flex-col">
-        <label for="experience">Experience</label>
-        <input class="input" type="text" id="experience" formControlName="experience">
-      </div>
-      
-      <div class="flex flex-col">
-        <label for="speed">Speed</label>
-        <input class="input" type="text" id="speed" formControlName="speed">
-      </div>
-      <div class="flex flex-col">
-        <label for="shooting">Shooting</label>
-        <input class="input" type="text" id="shooting" formControlName="shooting">
-      </div>
-      <div class="flex flex-col">
-        <label for="passing">Passing</label>
-        <input class="input" type="text" id="passing" formControlName="passing">
-      </div>
-      <div class="flex flex-col">
-        <label for="defending">Defending</label>
-        <input class="input" type="text" id="defending" formControlName="defending">
-      </div>
-      <div class="flex flex-col">
-        <label for="goalKeeper">Goal Keeper</label>
-        <input class="input" type="text" id="goalKeeper" formControlName="goalKeeper">
-      </div>
-      <div class="flex flex-col">
-        <label for="physical">Physical</label>
-        <input class="input" type="text" id="physical" formControlName="physical">
-      </div>
-      <div class="flex flex-col">
-        <label for="mental">Mental</label>
-        <input class="input" type="text" id="mental" formControlName="mental">
-      </div>
-      <div class="flex flex-col pb-3.5">
-        <label for="transport">Transport</label>
-        <input class="input" type="text" id="transport" formControlName="transport">
-      </div>
-      <button class="button" type="submit" (click)="onSubmit()">Create</button>
-    </form>
-  </app-card>
+<section class="flex flex-col bg-slate-500 drop-shadow-lg shadow-slate-600 overflow-y-hidden sm:overflow-y-auto">
+  <div class="flex flex-col justify-center items-center">
+    <app-card containerClass="max-w-full sm:max-w-4xl md:min-w-4xl lg:min-w-4xl xl:min-w-4xl">
+      <h1>Create a profile</h1>
+      <form class="text-slate-900 border-slate-800 p-4" [formGroup]="createProfileForm">
+        <div class="grid gap-4 grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2">
+          <div class="flex flex-col">
+            <label for="displayName">Display Name</label>
+            <input class="input w-full" type="text" id="displayName" formControlName="displayName">
+          </div>
+          <div class="flex flex-col">
+            <label for="location">Location</label>
+            <input class="input w-full" type="text" id="location" formControlName="location">
+          </div>
+          <div class="flex flex-col">
+            <label for="bio">Bio</label>
+            <input class="input w-full" type="text" id="bio" formControlName="bio">
+          </div>
+          <div class="flex flex-col">
+            <label for="experience">Experience</label>
+            <input class="input w-full" type="text" id="experience" formControlName="experience">
+          </div>
+        
+          <div class="flex flex-col">
+            <label for="speed">Speed</label>
+            <input class="input w-full" type="text" id="speed" formControlName="speed">
+          </div>
+          <div class="flex flex-col">
+            <label for="shooting">Shooting</label>
+            <input class="input w-full" type="text" id="shooting" formControlName="shooting">
+          </div>
+          <div class="flex flex-col">
+            <label for="passing">Passing</label>
+            <input class="input w-full" type="text" id="passing" formControlName="passing">
+          </div>
+          <div class="flex flex-col">
+            <label for="defending">Defending</label>
+            <input class="input w-full" type="text" id="defending" formControlName="defending">
+          </div>
+          <div class="flex flex-col">
+            <label for="goalKeeper">Goal Keeper</label>
+            <input class="input w-full" type="text" id="goalKeeper" formControlName="goalKeeper">
+          </div>
+          <div class="flex flex-col">
+            <label for="physical">Physical</label>
+            <input class="input w-full" type="text" id="physical" formControlName="physical">
+          </div>
+          <div class="flex flex-col">
+            <label for="mental">Mental</label>
+            <input class="input w-full" type="text" id="mental" formControlName="mental">
+          </div>
+          <div class="flex flex-col pb-3.5">
+            <label for="transport">Transport</label>
+            <input class="input w-full" type="text" id="transport" formControlName="transport">
+          </div>
+          <div class="col-span-full pt-4">
+            <button class="button w-full" type="submit" (click)="onSubmit()">Create</button>
+          </div>
+        </div>
+      </form>
+    </app-card>
   </div>
 </section>

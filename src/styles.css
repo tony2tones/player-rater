@@ -6,5 +6,5 @@ button {
 }
 
 input {
-  @apply border rounded-md text-slate-200 p-1
+  @apply border rounded-md p-1
 }
