@@ -2,9 +2,25 @@
 @import "tailwindcss";
 
 button {
-  @apply border rounded-md text-amber-50 border-slate-400 p-2 hover:cursor-pointer hover:bg-slate-600 transition duration-1000 ease-in-out 
+  @apply border rounded-md bg-slate-600 text-amber-50 border-slate-400 p-2 hover:cursor-pointer hover:bg-slate-800 transition duration-1000 ease-in-out 
 }
 
 input {
-  @apply border rounded-md text-slate-200 p-1
+  @apply border rounded-md p-1
 }
+.ng-select-container {
+  @apply border border-slate-800 rounded-md pl-1 py-1
+}
+.ng-dropdown-panel-items.scroll-host {
+  @apply bg-slate-50 rounded-b-md mt-1 pl-2  border border-slate-800 hover:cursor-pointer
+}
+.ng-select {
+  @apply hover:cursor-pointer
+}
+.ng-input {
+  @apply hover:cursor-pointer p-1
+}
+.ng-option {
+  @apply hover:cursor-pointer hover:bg-slate-200
+}
+  

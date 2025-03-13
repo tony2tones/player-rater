@@ -16,6 +16,14 @@ const config: Config = {
       fontFamily: {
         custom: ['Inter', 'sans-serif'], // Example: adding a custom font
       },
+      screens: {
+        'sm': '640px',  // Small devices (phones)
+        'md': '768px',  // Medium devices (tablets)
+        'lg': '1024px', // Large devices (laptops/desktops)
+        'xl': '1280px', // Extra large devices (large desktops)
+        '2xl': '1536px' // Very large screens (large desktop monitors)
+      },
+
     },
   },
   plugins: [],
