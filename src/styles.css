@@ -8,9 +8,11 @@ button {
 input {
   @apply border rounded-md p-1
 }
-
+.ng-select-container {
+  @apply border border-slate-800 rounded-md pl-1 py-1
+}
 .ng-dropdown-panel-items.scroll-host {
-  @apply bg-slate-50 rounded-md pl-2 hover:cursor-pointer
+  @apply bg-slate-50 rounded-b-md mt-1 pl-2  border border-slate-800 hover:cursor-pointer
 }
 .ng-select {
   @apply hover:cursor-pointer
