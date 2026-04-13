@@ -1,50 +1,73 @@
-import { inject, Injectable } from "@angular/core";
-import { Auth, createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile } from "@angular/fire/auth";
-import { Router } from "@angular/router";
-import { BehaviorSubject, from, Observable, of } from "rxjs";
+import { inject, Injectable } from '@angular/core';
+import { Firestore, doc, getDoc, setDoc } from '@angular/fire/firestore';
+import {
+  Auth,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  updateProfile,
+} from '@angular/fire/auth';
+import { Router } from '@angular/router';
+import { BehaviorSubject, from, Observable, of } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
-
 export class AuthService {
-  firebaseAuth = inject(Auth)
-  
-  router = inject(Router)
+  firebaseAuth = inject(Auth);
+  firestore = inject(Firestore);
+  router = inject(Router);
 
-private isLoggedInSubject = new BehaviorSubject<boolean>(false);
+  private isLoggedInSubject = new BehaviorSubject<boolean>(false);
 
   constructor() {
     this.firebaseAuth.onAuthStateChanged((user) => {
       this.isLoggedInSubject.next(!!user);
-    })
+    });
   }
 
-  register(email:string, username:string, password:string): Observable<void> {
-    const promise = createUserWithEmailAndPassword(this.firebaseAuth, email, password)
-    .then((response) => {
-      return updateProfile(response.user, {displayName: username});
-     });
-     return from(promise);
-   }
-
-   login(email: string, password: string): Observable<void> {
-    const promise = signInWithEmailAndPassword(this.firebaseAuth, email, password).then(() => {})
-    return from(promise)
+  checkUsername(username: string): Observable<boolean> {
+    const usernameDoc = doc(this.firestore, `usernames/${username}`);
+    return from(getDoc(usernameDoc).then((snapShot) => snapShot.exists()));
   }
 
-  logout = async() =>  {
+  register(
+    email: string,
+    username: string,
+    password: string,
+  ): Observable<void> {
+    const promise = createUserWithEmailAndPassword(
+      this.firebaseAuth,
+      email,
+      password,
+    ).then((response) => {
+      return updateProfile(response.user, { displayName: username }).then(() =>
+        setDoc(doc(this.firestore, `usernames/${username}`), {
+          uid: response.user.uid,
+        }),
+      );
+    });
+    return from(promise);
+  }
+
+  login(email: string, password: string): Observable<void> {
+    const promise = signInWithEmailAndPassword(
+      this.firebaseAuth,
+      email,
+      password,
+    ).then(() => {});
+    return from(promise);
+  }
+
+  logout = async () => {
     await this.firebaseAuth.signOut();
     this.isLoggedInSubject.next(false);
     this.router.navigate(['/auth/login']);
-  }
+  };
   isLoggedIn(): Observable<boolean> {
     return this.isLoggedInSubject.asObservable();
   }
 
-  getCurrentUser():Observable<any> {
+  getCurrentUser(): Observable<any> {
     return of(this.firebaseAuth.currentUser);
   }
-
-
 }
