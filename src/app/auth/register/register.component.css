@@ -1,0 +1,5 @@
+.bg-page {
+  background-image: url('/bg-background.jpg');
+  background-size: cover;
+  background-position: center;
+}
