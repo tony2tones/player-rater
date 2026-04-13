@@ -1,10 +1,11 @@
 import { Component, inject } from '@angular/core';
 import { Auth } from '@angular/fire/auth';
 import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { PlayerServiceService } from '../../services/player-service.service';
 import { CardComponent } from '../../components/card/card.component';
 import {NgSelectModule} from '@ng-select/ng-select';
+import { PlayerProfileInterface } from '../../interfaces/play-profile.interface';
 
 @Component({
   selector: 'app-create-profile',
@@ -15,13 +16,15 @@ import {NgSelectModule} from '@ng-select/ng-select';
 })
 export class CreateProfileComponent {
   firebaseAuth = inject(Auth);
+  router = inject(Router);
   playerService = inject(PlayerServiceService);
-fb = inject(FormBuilder);
-params = inject(ActivatedRoute);
-profileId: string | null = null;
-displayName: string | null = null;
-createProfileForm:FormGroup = new FormGroup({});
-isLoading = true;
+  fb = inject(FormBuilder);
+  params = inject(ActivatedRoute);
+  profileId: string | null = null;
+  displayName: string | null = null;
+  location: string | null = null;
+  createProfileForm:FormGroup = new FormGroup({});
+  isLoading = true;
 // dropdown values
 experienceOptions = [
   { id: 1, name: 'Beginner' },
@@ -48,6 +51,7 @@ ratingOptions = [
 constructor() {
   this.profileId = this.params.snapshot.paramMap.get('profileId');
   const displayNameResult = this.firebaseAuth.currentUser?.displayName;
+  console.log(this.firebaseAuth.currentUser)
   if(displayNameResult) {
     this.displayName = displayNameResult;
   }
@@ -57,11 +61,13 @@ skillsList = ['speed', 'shooting', 'passing', 'defending', 'physical', 'mental']
 
 ngOnInit() {
   this.playerService.getPlayers().subscribe((players) => {
-    this.playerService.playerSig.set(players);
+    this.playerService.playersSig.set(players);
   })
   this.createProfileFormGroup();
   if (this.createProfileForm) {
+    console.log('local', this.location)
     this.createProfileForm.controls['displayName'].patchValue(this.displayName ?? null);
+    this.createProfileForm.controls['location'].patchValue(this.location ?? null);
   }
  this.isLoading = false;
   
@@ -89,7 +95,14 @@ createProfileFormGroup() {
 onSubmit() {
   const rawForm = this.createProfileForm.getRawValue();
   console.log(rawForm);
-
+  let playerProfile:PlayerProfileInterface = rawForm as PlayerProfileInterface;
+  this.playerService.addPlayer(playerProfile).subscribe({
+    next: (playerProfile) => {
+      console.log('payload', playerProfile);
+      this.router.navigateByUrl('/dashboard');
+    }, 
+    error: (err) => console.log(`${err}`) 
+  });
   }
 
 }
