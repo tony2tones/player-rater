@@ -2,35 +2,38 @@ import { Component, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
+import { InputComponent } from '../../components/ui/input/input.component';
 
 @Component({
   selector: 'app-login',
-  imports: [ReactiveFormsModule],
-  standalone:true,
+  imports: [ReactiveFormsModule, InputComponent],
+  standalone: true,
   templateUrl: './login.component.html',
-  styleUrl: './login.component.css'
+  styleUrl: './login.component.css',
 })
 export class LoginComponent {
-fb = inject(FormBuilder)
-auth = inject(AuthService)
-router = inject(Router)
+  fb = inject(FormBuilder);
+  auth = inject(AuthService);
+  router = inject(Router);
 
-loginForm = this.fb.group({
-  email: ['', Validators.email],
-  password: ['', Validators.required],
-})
+  loginForm = this.fb.group({
+    email: ['', Validators.email],
+    password: ['', Validators.required],
+  });
 
-onSubmit() {
-  const rawForm = this.loginForm.getRawValue();
-  this.auth.login(rawForm.email as string, rawForm.password as string).subscribe(() => {
-    this.router.navigate(['/']);
-  })
-}
+  onSubmit() {
+    const rawForm = this.loginForm.getRawValue();
+    this.auth
+      .login(rawForm.email as string, rawForm.password as string)
+      .subscribe(() => {
+        this.router.navigate(['/']);
+      });
+  }
 
-get email() {
-  return this.loginForm.get('email');
-}
-get password() {
-  return this.loginForm.get('password');
-}
+  get email() {
+    return this.loginForm.get('email');
+  }
+  get password() {
+    return this.loginForm.get('password');
+  }
 }
