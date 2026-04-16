@@ -11,11 +11,12 @@ import {
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { map, Observable, of } from 'rxjs';
+import { InputComponent } from '../../components/ui/input/input.component';
 
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, InputComponent],
   templateUrl: './register.component.html',
   styleUrl: './register.component.css',
 })

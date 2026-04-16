@@ -3,16 +3,29 @@
 <form class="flex-1 flex flex-col gap-1 text-slate-200 p-6 m-6 sm:p-4 sm:min-w-96" [formGroup]="loginForm">
   <h2 class="text-xl font-bold mb-2">Login</h2>
 
-  <label for="email">Email *</label>
-  <input class="input" type="email" id="email" formControlName="email">
+  <app-input
+    id="email"
+    label="Email"
+    [required]=true
+    [control]="loginForm.controls.email"
+  />
+  <!-- <label for="email">Email *</label> -->
+  <!-- <input class="input" type="email" id="email" formControlName="email"> -->
   <div class="min-h-6 text-cyan-400">
     @if(email?.invalid && email?.touched) {
       <ng-content> {{email?.hasError('required') ? 'Email is required' : ''}}</ng-content>
       <ng-content> {{email?.hasError('email') ? 'Email is invalid' : ''}}</ng-content>
     }
   </div>
-  <label for="password">Password *</label>
-  <input class="input" type="password" id="password" formControlName="password">
+  <app-input
+    id="password"
+    type="password"
+    label="Password"
+    [required]=true
+    [control]="loginForm.controls.password"
+  />
+  <!-- <label for="password">Password *</label> -->
+  <!-- <input class="input" type="password" id="password" formControlName="password"> -->
   <div class="min-h-6 text-cyan-400">
     @if(password?.invalid && password?.touched) {
       <ng-content> {{password?.hasError('required') ? 'Password is required' : ''}}</ng-content>
