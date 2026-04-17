@@ -2,7 +2,7 @@ import { Component, inject, OnInit } from '@angular/core';
 import { Auth } from '@angular/fire/auth';
 import { Router } from '@angular/router';
 import { CardComponent } from '../../components/card/card.component';
-import { PlayerServiceService } from '../../services/player-service.service';
+import { PlayerService } from '../../services/player-service.service';
 import { CommonModule, JsonPipe } from '@angular/common';
 import { ProfilePanelComponent } from '../../components/profile-panel/profile-panel.component';
 
@@ -30,7 +30,7 @@ export type playerProfileInterface = {
 })
 export class DashboardComponent implements OnInit {
   firebaseAuth = inject(Auth);
-  playerService = inject(PlayerServiceService);
+  playerService = inject(PlayerService);
   router = inject(Router);
   json = inject(JsonPipe);
   currentUserName: string | null = null;
@@ -50,7 +50,6 @@ export class DashboardComponent implements OnInit {
     this.playerService.getPlayers().subscribe({
       next: (data: playerProfileInterface[]) => {
         this.playerList = data;
-        console.log(this.playerList);
       },
       error: (err) => console.log(err),
     });
