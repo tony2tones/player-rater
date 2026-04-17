@@ -4,12 +4,13 @@ import { RegisterComponent } from './auth/register/register.component';
 import { AuthGuardService } from './services/auth-guard.service';
 import { DashboardComponent } from './features/dashboard/dashboard.component';
 import { CreateProfileComponent } from './features/create-profile/create-profile.component';
+import { PlayerProfileComponent } from './features/player-profile/player-profile.component';
 
 export const routes: Routes = [
   {
     path: '',
     redirectTo: '/dashboard',
-    pathMatch: 'full'
+    pathMatch: 'full',
   },
   {
     path: 'dashboard',
@@ -19,20 +20,20 @@ export const routes: Routes = [
   {
     path: 'create-profile/:profileId',
     component: CreateProfileComponent,
-    canActivate:[AuthGuardService],
+    canActivate: [AuthGuardService],
   },
   {
     path: 'player-profile/:profileId',
-    component: CreateProfileComponent,
-    canActivate:[AuthGuardService],
+    component: PlayerProfileComponent,
+    canActivate: [AuthGuardService],
   },
-{
-  path: 'auth/login',
-  component: LoginComponent,
-},
-{
-  path: 'auth/register',
-  component: RegisterComponent,
-},
-{path: '**', redirectTo: '/auth/login'}
+  {
+    path: 'auth/login',
+    component: LoginComponent,
+  },
+  {
+    path: 'auth/register',
+    component: RegisterComponent,
+  },
+  { path: '**', redirectTo: '/auth/login' },
 ];
