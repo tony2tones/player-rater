@@ -1,16 +1,15 @@
 import { inject, Injectable, signal } from '@angular/core';
 import {
   Firestore,
-  addDoc,
   collection,
   collectionData,
   docData,
   doc,
+  setDoc,
 } from '@angular/fire/firestore';
-import { UserInterface } from '../interfaces/user.interface';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { from, Observable } from 'rxjs';
 import { PlayerProfileInterface } from '../interfaces/play-profile.interface';
-import { playerProfileInterface } from '../features/dashboard/dashboard.component';
 
 @Injectable({
   providedIn: 'root',
@@ -18,27 +17,27 @@ import { playerProfileInterface } from '../features/dashboard/dashboard.componen
 export class PlayerService {
   fireStore = inject(Firestore);
   playerCollection = collection(this.fireStore, 'players');
-  // playerProfileCollection = collection(this.fireStore,`players/${id}`, );
-  playerSig = signal<UserInterface[]>([]);
-  playersSig = signal<playerProfileInterface[]>([]);
+  currentPlayerSig = signal<PlayerProfileInterface | null>(null);
+  players = toSignal(
+    collectionData(this.playerCollection, { idField: 'id' }) as Observable<PlayerProfileInterface[]>,
+    { initialValue: [] as PlayerProfileInterface[] }
+  );
 
-  getPlayers(): Observable<playerProfileInterface[]> {
+  getPlayers(): Observable<PlayerProfileInterface[]> {
     return collectionData(this.playerCollection, {
       idField: 'id',
-    }) as Observable<playerProfileInterface[]>;
+    }) as Observable<PlayerProfileInterface[]>;
   }
 
-  getPlayerById(id: string): Observable<playerProfileInterface> {
+  getPlayerById(id: string): Observable<PlayerProfileInterface> {
     const docRef = doc(this.fireStore, `players/${id}`);
     return docData(docRef, {
       idField: 'id',
-    }) as Observable<playerProfileInterface>;
+    }) as Observable<PlayerProfileInterface>;
   }
 
-  addPlayer(player: PlayerProfileInterface): Observable<string> {
-    const promise = addDoc(this.playerCollection, player).then(
-      (docRef) => docRef.id,
-    );
-    return from(promise);
+  savePlayer(id: string, player: PlayerProfileInterface): Observable<void> {
+    const docRef = doc(this.fireStore, `players/${id}`);
+    return from(setDoc(docRef, player, { merge: true }));
   }
 }

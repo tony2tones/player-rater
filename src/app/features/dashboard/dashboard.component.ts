@@ -3,28 +3,16 @@ import { Auth } from '@angular/fire/auth';
 import { Router } from '@angular/router';
 import { CardComponent } from '../../components/card/card.component';
 import { PlayerService } from '../../services/player-service.service';
-import { CommonModule, JsonPipe } from '@angular/common';
-import { ProfilePanelComponent } from '../../components/profile-panel/profile-panel.component';
-
-export type playerProfileInterface = {
-  displayName: string;
-  bio: string;
-  experience: string;
-  id: string;
-  location: string;
-  skills: {
-    passing: number;
-    physical: number;
-    shooting: number;
-    speed: number;
-    defending: number;
-  };
-} | null;
+import { CommonModule } from '@angular/common';
+import {
+  Player,
+  ProfilePanelComponent,
+} from '../../components/profile-panel/profile-panel.component';
+import { PlayerProfileInterface } from '../../interfaces/play-profile.interface';
 
 @Component({
   selector: 'app-dashboard',
   imports: [CardComponent, ProfilePanelComponent, CommonModule],
-  providers: [JsonPipe],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css',
 })
@@ -32,27 +20,14 @@ export class DashboardComponent implements OnInit {
   firebaseAuth = inject(Auth);
   playerService = inject(PlayerService);
   router = inject(Router);
-  json = inject(JsonPipe);
-  currentUserName: string | null = null;
-  playerList: playerProfileInterface[] = [];
+  player!: PlayerProfileInterface;
 
   ngOnInit() {
-    const name = this.firebaseAuth.currentUser;
-    const id = this.firebaseAuth.tenantId;
-    console.log('the id? ', id);
-    if (name) {
-      this.currentUserName = name.displayName;
-    }
-    this.getPlayers();
-  }
-
-  getPlayers() {
-    this.playerService.getPlayers().subscribe({
-      next: (data: playerProfileInterface[]) => {
-        this.playerList = data;
-      },
-      error: (err) => console.log(err),
-    });
+    this.playerService
+      .getPlayerById(this.firebaseAuth.currentUser?.uid || '')
+      .subscribe((playerData) => {
+        this.player = playerData as PlayerProfileInterface;
+      });
   }
 
   createProfile() {

@@ -1,10 +1,12 @@
 export interface PlayerProfileInterface {
-  id?: string; // Optional, since Firebase generates an ID
+  id?: string;
+  fullName?: string;
   displayName: string;
   location: string;
   bio: string;
+  experience?: string;
   position: string;
-  photoUrl?: string; // Optional field
+  photoUrl?: string;
   transport: string;
   skills: {
     speed: number | null;
