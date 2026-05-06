@@ -1,5 +1,4 @@
-import { Component, inject } from '@angular/core';
-import { Auth } from '@angular/fire/auth';
+import { Component, effect, inject } from '@angular/core';
 import {
   FormBuilder,
   FormControl,
@@ -13,6 +12,24 @@ import { CardComponent } from '../../components/card/card.component';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { PlayerProfileInterface } from '../../interfaces/play-profile.interface';
 
+type ProfileForm = FormGroup<{
+  fullName: FormControl<string | null>;
+  displayName: FormControl<string | null>;
+  location: FormControl<string | null>;
+  bio: FormControl<string | null>;
+  position: FormControl<string | null>;
+  photoUrl: FormControl<string | null>;
+  transport: FormControl<string | null>;
+  skills: FormGroup<{
+    speed: FormControl<number | null>;
+    shooting: FormControl<number | null>;
+    passing: FormControl<number | null>;
+    defending: FormControl<number | null>;
+    physical: FormControl<number | null>;
+    mental: FormControl<number | null>;
+  }>;
+}>;
+
 @Component({
   selector: 'app-create-profile',
   imports: [ReactiveFormsModule, FormsModule, CardComponent, NgSelectModule],
@@ -21,15 +38,12 @@ import { PlayerProfileInterface } from '../../interfaces/play-profile.interface'
   styleUrl: './create-profile.component.css',
 })
 export class CreateProfileComponent {
-  firebaseAuth = inject(Auth);
   router = inject(Router);
   playerService = inject(PlayerService);
   fb = inject(FormBuilder);
   params = inject(ActivatedRoute);
   profileId: string | null = null;
-  displayName: string | null = null;
-  location: string | null = null;
-  createProfileForm: FormGroup = new FormGroup({});
+  createProfileForm!: ProfileForm;
   isLoading = true;
   // dropdown values
   experienceOptions = [
@@ -56,11 +70,29 @@ export class CreateProfileComponent {
 
   constructor() {
     this.profileId = this.params.snapshot.paramMap.get('profileId');
-    const displayNameResult = this.firebaseAuth.currentUser?.displayName;
-    console.log(this.firebaseAuth.currentUser);
-    if (displayNameResult) {
-      this.displayName = displayNameResult;
-    }
+    this.createProfileForm = this.buildForm();
+    effect(() => {
+      const player = this.playerService.currentPlayerSig();
+      if (player) {
+        this.createProfileForm.patchValue({
+          fullName: player.fullName ?? null,
+          displayName: player.displayName ?? null,
+          location: player.location ?? null,
+          bio: player.bio ?? null,
+          position: player.position ?? null,
+          photoUrl: player.photoUrl ?? null,
+          transport: player.transport ?? null,
+          skills: {
+            speed: player.skills?.speed ?? null,
+            shooting: player.skills?.shooting ?? null,
+            passing: player.skills?.passing ?? null,
+            defending: player.skills?.defending ?? null,
+            physical: player.skills?.physical ?? null,
+            mental: player.skills?.mental ?? null,
+          },
+        });
+      }
+    });
   }
 
   skillsList = [
@@ -73,51 +105,35 @@ export class CreateProfileComponent {
   ];
 
   ngOnInit() {
-    this.playerService.getPlayers().subscribe((players) => {
-      this.playerService.playersSig.set(players);
-    });
-    this.createProfileFormGroup();
-    if (this.createProfileForm) {
-      console.log('local', this.location);
-      this.createProfileForm.controls['displayName'].patchValue(
-        this.displayName ?? null,
-      );
-      this.createProfileForm.controls['location'].patchValue(
-        this.location ?? null,
-      );
-    }
     this.isLoading = false;
   }
 
-  createProfileFormGroup() {
-    this.createProfileForm = this.fb.group({
-      displayName: [this.displayName ?? ''],
-      location: [''],
-      bio: [''],
-      position: [''],
-      photoUrl: [''],
-      transport: [''],
+  buildForm(): ProfileForm {
+    return this.fb.group({
+      fullName: new FormControl<string | null>(null),
+      displayName: new FormControl<string | null>(null),
+      location: new FormControl<string | null>(null),
+      bio: new FormControl<string | null>(null),
+      position: new FormControl<string | null>(null),
+      photoUrl: new FormControl<string | null>(null),
+      transport: new FormControl<string | null>(null),
       skills: this.fb.group({
-        speed: new FormControl(null),
-        shooting: new FormControl(null),
-        passing: new FormControl(null),
-        defending: new FormControl(null),
-        physical: new FormControl(null),
-        mental: new FormControl(null),
+        speed: new FormControl<number | null>(null),
+        shooting: new FormControl<number | null>(null),
+        passing: new FormControl<number | null>(null),
+        defending: new FormControl<number | null>(null),
+        physical: new FormControl<number | null>(null),
+        mental: new FormControl<number | null>(null),
       }),
-    });
+    }) as ProfileForm;
   }
 
   onSubmit() {
-    const rawForm = this.createProfileForm.getRawValue();
-    console.log(rawForm);
-    let playerProfile: PlayerProfileInterface =
-      rawForm as PlayerProfileInterface;
-    this.playerService.addPlayer(playerProfile).subscribe({
-      next: (playerProfile) => {
-        console.log('payload', playerProfile);
-        this.router.navigateByUrl('/dashboard');
-      },
+    if (!this.profileId) return;
+    const playerProfile =
+      this.createProfileForm.getRawValue() as PlayerProfileInterface;
+    this.playerService.savePlayer(this.profileId, playerProfile).subscribe({
+      next: () => this.router.navigateByUrl('/dashboard'),
       error: (err) => console.log(`${err}`),
     });
   }

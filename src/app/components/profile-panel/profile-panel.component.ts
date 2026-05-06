@@ -1,10 +1,9 @@
 import { Component, Input, OnInit, inject, input, signal } from '@angular/core';
-import { PlayerProfileInterface } from '../../interfaces/play-profile.interface';
 import { CardComponent } from '../card/card.component';
-import { playerProfileInterface } from '../../features/dashboard/dashboard.component';
 import { Router } from '@angular/router';
+import { PlayerProfileInterface } from '../../interfaces/play-profile.interface';
 
-type Player = {
+export type Player = {
   transport: string;
   photoUrl: string;
   position: string;
@@ -30,7 +29,7 @@ type Player = {
   standalone: true,
 })
 export class ProfilePanelComponent implements OnInit {
-  player = input<playerProfileInterface | null>(null);
+  player = input<PlayerProfileInterface | null>(null);
   router = inject(Router);
 
   ngOnInit(): void {}

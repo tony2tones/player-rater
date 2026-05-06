@@ -2,12 +2,16 @@
   <section class="flex flex-col bg-slate-500 drop-shadow-lg shadow-slate-600 overflow-y-hidden sm:overflow-y-auto">
     <div class="flex flex-col justify-center items-center">
       <app-card containerClass="max-w-full sm:max-w-4xl md:min-w-4xl lg:min-w-4xl xl:min-w-4xl">
-        <h1>Create a profile</h1>
+        <h1>{{ profileId ? 'Update Profile' : 'Create a Profile' }}</h1>
         <form class="text-slate-900 border-slate-800 p-4" [formGroup]="createProfileForm" (ngSubmit)="onSubmit()">
           <div class="grid gap-4 grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2">
             <div class="flex flex-col">
+              <label for="fullName">Full Name</label>
+              <input class="input w-full" type="text" id="fullName" formControlName="fullName" [value]="createProfileForm.get('fullName')?.value || ''">
+            </div>
+            <div class="flex flex-col">
               <label for="displayName">Display Name</label>
-              <input class="input w-full" type="text" id="displayName" formControlName="displayName">
+              <input class="input w-full" type="text" id="displayName" formControlName="displayName" [value]="createProfileForm.get('displayName')?.value || ''">
             </div>
             <div class="flex flex-col">
               <label for="location">Location</label>
@@ -34,7 +38,7 @@
           </div>
             } 
             <div class="col-span-full pt-4">
-              <button class="button w-full" type="submit">Create</button>
+              <button class="button w-full" type="submit">{{ profileId ? 'Update' : 'Create' }}</button>
             </div>
           </div>
         </form>
