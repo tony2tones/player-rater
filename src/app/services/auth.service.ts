@@ -1,4 +1,9 @@
-import { inject, Injectable, Injector, runInInjectionContext } from '@angular/core';
+import {
+  inject,
+  Injectable,
+  Injector,
+  runInInjectionContext,
+} from '@angular/core';
 import { Firestore, doc, getDoc, setDoc } from '@angular/fire/firestore';
 import {
   Auth,
@@ -20,7 +25,7 @@ export class AuthService {
   playerService = inject(PlayerService);
   injector = inject(Injector);
 
-  private isLoggedInSubject = new BehaviorSubject<boolean>(false);
+  private isLoggedInSubject = new BehaviorSubject<boolean | null>(null);
 
   constructor() {
     this.firebaseAuth.onAuthStateChanged((user) => {
@@ -61,21 +66,12 @@ export class AuthService {
     return from(promise);
   }
 
-  login(email: string, password: string): Observable<void> {
-    const promise = signInWithEmailAndPassword(
-      this.firebaseAuth,
-      email,
-      password,
-    ).then(() => {});
-    return from(promise);
-  }
-
   logout = async () => {
     await this.firebaseAuth.signOut();
     this.isLoggedInSubject.next(false);
     this.router.navigate(['/auth/login']);
   };
-  isLoggedIn(): Observable<boolean> {
+  isLoggedIn(): Observable<boolean | null> {
     return this.isLoggedInSubject.asObservable();
   }
 
