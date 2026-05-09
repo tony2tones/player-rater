@@ -18,11 +18,9 @@ constructor(){
 
 canActivate(next:ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
   return this.authService.isLoggedIn().pipe(
-    filter((value => { 
-      return value !== null
-    })),
+    filter((value): value is boolean => value !== null),
     take(1),
-    map((isLoggedIn: boolean) => {
+    map((isLoggedIn) => {
       if(!isLoggedIn) {
         this.router.navigate(['/auth/login']);
         return false;

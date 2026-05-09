@@ -1,10 +1,5 @@
 import { Routes } from '@angular/router';
-import { LoginComponent } from './auth/login/login.component';
-import { RegisterComponent } from './auth/register/register.component';
 import { AuthGuardService } from './services/auth-guard.service';
-import { DashboardComponent } from './features/dashboard/dashboard.component';
-import { CreateProfileComponent } from './features/create-profile/create-profile.component';
-import { PlayerProfileComponent } from './features/player-profile/player-profile.component';
 
 export const routes: Routes = [
   {
@@ -14,26 +9,39 @@ export const routes: Routes = [
   },
   {
     path: 'dashboard',
-    component: DashboardComponent,
+    loadComponent: () =>
+      import('./features/dashboard/dashboard.component').then(
+        (m) => m.DashboardComponent,
+      ),
     canActivate: [AuthGuardService],
   },
   {
     path: 'create-profile/:profileId',
-    component: CreateProfileComponent,
+    loadComponent: () =>
+      import('./features/create-profile/create-profile.component').then(
+        (m) => m.CreateProfileComponent,
+      ),
     canActivate: [AuthGuardService],
   },
   {
     path: 'player-profile/:profileId',
-    component: PlayerProfileComponent,
+    loadComponent: () =>
+      import('./features/player-profile/player-profile.component').then(
+        (m) => m.PlayerProfileComponent,
+      ),
     canActivate: [AuthGuardService],
   },
   {
     path: 'auth/login',
-    component: LoginComponent,
+    loadComponent: () =>
+      import('./auth/login/login.component').then((m) => m.LoginComponent),
   },
   {
     path: 'auth/register',
-    component: RegisterComponent,
+    loadComponent: () =>
+      import('./auth/register/register.component').then(
+        (m) => m.RegisterComponent,
+      ),
   },
   { path: '**', redirectTo: '/auth/login' },
 ];
