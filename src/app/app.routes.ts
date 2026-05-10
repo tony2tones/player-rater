@@ -24,6 +24,22 @@ export const routes: Routes = [
     canActivate: [AuthGuardService],
   },
   {
+    path: 'matches',
+    loadComponent: () =>
+      import('./features/matches/matches.component').then(
+        (m) => m.MatchesComponent,
+      ),
+    canActivate: [AuthGuardService],
+  },
+  {
+    path: 'create-match',
+    loadComponent: () =>
+      import('./features/create-match/create-match.component').then(
+        (m) => m.CreateMatchComponent,
+      ),
+    canActivate: [AuthGuardService],
+  },
+  {
     path: 'player-profile/:profileId',
     loadComponent: () =>
       import('./features/player-profile/player-profile.component').then(

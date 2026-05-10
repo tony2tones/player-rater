@@ -35,4 +35,12 @@ export class DashboardComponent implements OnInit {
       `/edit-profile/${this.firebaseAuth.currentUser?.uid}`,
     ]);
   }
+
+  goToMatches() {
+    this.router.navigate(['/matches']);
+  }
+
+  goToCreateMatch() {
+    this.router.navigate(['/create-match']);
+  }
 }

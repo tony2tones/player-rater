@@ -20,6 +20,7 @@ type ProfileForm = FormGroup<{
   position: FormControl<string | null>;
   photoUrl: FormControl<string | null>;
   transport: FormControl<string | null>;
+  isOrganiser: FormControl<boolean | null>;
   skills: FormGroup<{
     speed: FormControl<number | null>;
     shooting: FormControl<number | null>;
@@ -46,10 +47,18 @@ export class EditProfileComponent {
   profileId: string | null = null;
   profileForm!: ProfileForm;
   isLoading = true;
+  isOrganiser = signal(false);
 
   previewUrl = signal<string | null>(null);
   uploadProgress = signal<number | null>(null);
   isUploading = signal(false);
+
+  readonly positions = [
+    { value: 'GK', label: 'Goalkeeper' },
+    { value: 'DEF', label: 'Defender' },
+    { value: 'MID', label: 'Midfielder' },
+    { value: 'FWD', label: 'Forward' },
+  ] as const;
 
   experienceOptions = [
     { id: 1, name: 'Beginner' },
@@ -74,7 +83,14 @@ export class EditProfileComponent {
     { value: 7, label: '7 - Excellent' },
   ];
 
-  skillsList = ['speed', 'shooting', 'passing', 'defending', 'physical', 'mental'];
+  skillsList = [
+    'speed',
+    'shooting',
+    'passing',
+    'defending',
+    'physical',
+    'mental',
+  ];
 
   constructor() {
     this.profileId = this.params.snapshot.paramMap.get('profileId');
@@ -90,6 +106,7 @@ export class EditProfileComponent {
           position: player.position ?? null,
           photoUrl: player.photoUrl ?? null,
           transport: player.transport ?? null,
+          isOrganiser: player.isOrganiser ?? null,
           skills: {
             speed: player.skills?.speed ?? null,
             shooting: player.skills?.shooting ?? null,
@@ -102,6 +119,7 @@ export class EditProfileComponent {
         if (player.photoUrl) {
           this.previewUrl.set(player.photoUrl);
         }
+        this.isOrganiser.set(player.isOrganiser ?? false);
       }
     });
   }
@@ -119,6 +137,7 @@ export class EditProfileComponent {
       position: new FormControl<string | null>(null),
       photoUrl: new FormControl<string | null>(null),
       transport: new FormControl<string | null>(null),
+      isOrganiser: new FormControl<boolean | null>(null),
       skills: this.fb.group({
         speed: new FormControl<number | null>(null),
         shooting: new FormControl<number | null>(null),
@@ -169,13 +188,18 @@ export class EditProfileComponent {
       this.uploadProgress.set(null);
     });
 
-    xhr.open('POST', `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`);
+    xhr.open(
+      'POST',
+      `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,
+    );
     xhr.send(formData);
   }
 
   onSubmit() {
     if (!this.profileId || this.isUploading()) return;
-    const playerProfile = this.profileForm.getRawValue() as PlayerProfileInterface;
+    const playerProfile =
+      this.profileForm.getRawValue() as PlayerProfileInterface;
+    playerProfile.isOrganiser = this.isOrganiser();
     this.playerService.savePlayer(this.profileId, playerProfile).subscribe({
       next: () => this.router.navigateByUrl('/dashboard'),
       error: (err) => console.log(`${err}`),

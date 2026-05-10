@@ -8,6 +8,8 @@ export interface PlayerProfileInterface {
   position: string;
   photoUrl?: string;
   transport: string;
+  isOrganiser?: boolean;
+  gamesPlayed?: number;
   skills: {
     speed: number | null;
     shooting: number | null;
