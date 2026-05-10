@@ -102,6 +102,39 @@
                 <ng-option [value]="'No'">No</ng-option>
               </ng-select>
             </div>
+              <div class="flex flex-col gap-1">
+              <label for="position" class="text-sm font-medium text-slate-700">Preferred position</label>
+              <ng-select
+                id="position"
+                formControlName="position"
+                [clearable]="false"
+                class="text-sm"
+                [items]="positions"
+                bindLabel="label"
+                bindValue="value"
+              >
+              </ng-select>
+            </div>
+            <!-- Organiser toggle — outside the grid so it spans full width -->
+            <div class="col-span-full flex items-center justify-between rounded-xl border border-slate-200 px-4 py-3">
+              <div>
+                <p class="text-sm font-medium text-slate-700">Match Organiser</p>
+                <p class="text-xs text-slate-400">Organisers can create matches and search for players</p>
+              </div>
+              <button
+                type="button"
+                (click)="isOrganiser.set(!isOrganiser())"
+                class="relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-200"
+                [class.bg-slate-800]="isOrganiser()"
+                [class.bg-slate-300]="!isOrganiser()"
+              >
+                <span
+                  class="inline-block h-4 w-4 transform rounded-full bg-white shadow transition-transform duration-200"
+                  [class.translate-x-6]="isOrganiser()"
+                  [class.translate-x-1]="!isOrganiser()"
+                ></span>
+              </button>
+            </div>
           </div>
         </div>
 
