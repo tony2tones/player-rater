@@ -12,6 +12,7 @@ import { authReducer } from './store/auth/auth.reducer';
 import { provideEffects } from '@ngrx/effects';
 import { AuthEffects } from './store/auth/auth.effects';
 import { provideStoreDevtools } from '@ngrx/store-devtools';
+import { playerReducer } from './store/player/player.reducer';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -21,7 +22,7 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient(),
     provideAuth(() => getAuth()),
     provideFirestore(() => getFirestore()),
-    provideStore({ auth: authReducer }),
+    provideStore({ auth: authReducer, player: playerReducer }),
     provideEffects([AuthEffects]),
     provideStoreDevtools({ maxAge: 35, logOnly: false }),
   ],

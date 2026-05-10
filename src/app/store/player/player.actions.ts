@@ -48,3 +48,17 @@ export const loadPlayerFailed = createAction(
   '[Player] Load Player Failed',
   props<{ error: string }>(),
 );
+
+export const savePlayer = createAction(
+  '[Player] Save Player',
+  props<{ id: string; player: PlayerProfileInterface }>(),
+);
+
+export const savePlayerSuccess = createAction(
+  '[Player] Save Player Successful',
+);
+
+export const savePlayerFailed = createAction(
+  '[Player] Save Failed',
+  props<{ error: string }>(),
+);

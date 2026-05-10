@@ -4,11 +4,13 @@
         <div>
   <p>Welcome {{playerService.currentPlayerSig()?.displayName}}</p>
   <p>what would you like to do? </p>
+  <div>{{playerService.currentPlayerSig()?.photoUrl}}</div>    
+        <div>{{playerService.currentPlayerSig()?.bio}}</div>    
   </div>
   <!-- <div>{{playerList[3] | json }}</div> -->
 
 
-<button class="button" (click)="createProfile()">Update your profile</button>
+<button class="button" (click)="editProfile()">Update your profile</button>
 
 <!--TODO -->
 <!-- <button class="button" >Update current profile</button> -->
