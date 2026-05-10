@@ -30,9 +30,9 @@ export class DashboardComponent implements OnInit {
       });
   }
 
-  createProfile() {
+  editProfile() {
     this.router.navigate([
-      `/create-profile/${this.firebaseAuth.currentUser?.uid}`,
+      `/edit-profile/${this.firebaseAuth.currentUser?.uid}`,
     ]);
   }
 }

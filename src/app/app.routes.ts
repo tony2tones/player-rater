@@ -16,10 +16,10 @@ export const routes: Routes = [
     canActivate: [AuthGuardService],
   },
   {
-    path: 'create-profile/:profileId',
+    path: 'edit-profile/:profileId',
     loadComponent: () =>
-      import('./features/create-profile/create-profile.component').then(
-        (m) => m.CreateProfileComponent,
+      import('./features/edit-profile/edit-profile.component').then(
+        (m) => m.EditProfileComponent,
       ),
     canActivate: [AuthGuardService],
   },

@@ -3,6 +3,8 @@ import { PlayerProfileInterface } from '../../interfaces/play-profile.interface'
 import { JsonPipe } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PlayerService } from '../../services/player-service.service';
+import { Store } from '@ngrx/store';
+import { selectSelectedPlayer } from '../../store/player/player.sekectors';
 
 @Component({
   selector: 'app-player-profile',
@@ -14,6 +16,7 @@ export class PlayerProfileComponent implements OnInit {
   activatedRoute = inject(ActivatedRoute);
   playerService = inject(PlayerService);
   player!: PlayerProfileInterface;
+  store = inject(Store);
   profileId = this.activatedRoute.snapshot.paramMap.get('profileId') ?? '';
 
   ngOnInit(): void {

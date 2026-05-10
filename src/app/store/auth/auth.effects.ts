@@ -1,4 +1,3 @@
-// ask why Actions is with a capital
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Action } from '@ngrx/store';
 import { inject, Injectable } from '@angular/core';
@@ -25,7 +24,11 @@ export class AuthEffects {
       new Observable<Action>((observer) => {
         onAuthStateChanged(this.auth, (user) => {
           const serializedUser = user
-            ? { uid: user.uid, email: user.email, displayName: user.displayName }
+            ? {
+                uid: user.uid,
+                email: user.email,
+                displayName: user.displayName,
+              }
             : null;
           observer.next(AuthActions.authStateChanged({ user: serializedUser }));
         });
@@ -35,17 +38,18 @@ export class AuthEffects {
   login$ = createEffect(() =>
     this.action$.pipe(
       ofType(AuthActions.loginRequest),
-      tap(() => console.log('Login request received')),
       switchMap(({ email, password }) =>
         from(signInWithEmailAndPassword(this.auth, email, password)).pipe(
-          map(({ user }) => AuthActions.loginSuccess({
-            user: { uid: user.uid, email: user.email, displayName: user.displayName },
-          })),
+          map(({ user }) =>
+            AuthActions.loginSuccess({
+              user: {
+                uid: user.uid,
+                email: user.email,
+                displayName: user.displayName,
+              },
+            }),
+          ),
           catchError((error) => {
-            console.error('Login error type:', error?.constructor?.name);
-            console.error('Login error code:', error?.code);
-            console.error('Login error message:', error?.message);
-            console.error('Full error:', error);
             return of(AuthActions.loginFailed({ error: error.message }));
           }),
         ),
@@ -56,7 +60,6 @@ export class AuthEffects {
   loginSuccess$ = createEffect(
     () =>
       this.action$.pipe(
-        tap(() => console.log('Login successful, navigating to dashboard')),
         ofType(AuthActions.loginSuccess),
         tap(() => this.router.navigate(['/dashboard'])),
       ),

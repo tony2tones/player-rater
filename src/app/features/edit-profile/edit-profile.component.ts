@@ -1,4 +1,4 @@
-import { Component, effect, inject } from '@angular/core';
+import { Component, effect, inject, signal } from '@angular/core';
 import {
   FormBuilder,
   FormControl,
@@ -8,9 +8,9 @@ import {
 } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PlayerService } from '../../services/player-service.service';
-import { CardComponent } from '../../components/card/card.component';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { PlayerProfileInterface } from '../../interfaces/play-profile.interface';
+import { environment } from '../../../../environments';
 
 type ProfileForm = FormGroup<{
   fullName: FormControl<string | null>;
@@ -31,21 +31,26 @@ type ProfileForm = FormGroup<{
 }>;
 
 @Component({
-  selector: 'app-create-profile',
-  imports: [ReactiveFormsModule, FormsModule, CardComponent, NgSelectModule],
+  selector: 'app-edit-profile',
+  imports: [ReactiveFormsModule, FormsModule, NgSelectModule],
   standalone: true,
-  templateUrl: './create-profile.component.html',
-  styleUrl: './create-profile.component.css',
+  templateUrl: './edit-profile.component.html',
+  styleUrl: './edit-profile.component.css',
 })
-export class CreateProfileComponent {
+export class EditProfileComponent {
   router = inject(Router);
   playerService = inject(PlayerService);
   fb = inject(FormBuilder);
   params = inject(ActivatedRoute);
+
   profileId: string | null = null;
-  createProfileForm!: ProfileForm;
+  profileForm!: ProfileForm;
   isLoading = true;
-  // dropdown values
+
+  previewUrl = signal<string | null>(null);
+  uploadProgress = signal<number | null>(null);
+  isUploading = signal(false);
+
   experienceOptions = [
     { id: 1, name: 'Beginner' },
     { id: 2, name: 'Intermediate' },
@@ -58,6 +63,7 @@ export class CreateProfileComponent {
     { roleId: 2, roleName: 'Midfielder' },
     { roleId: 3, roleName: 'Forward' },
   ];
+
   ratingOptions = [
     { value: 1, label: '1 - Poor' },
     { value: 2, label: '2 - Below Average' },
@@ -68,13 +74,15 @@ export class CreateProfileComponent {
     { value: 7, label: '7 - Excellent' },
   ];
 
+  skillsList = ['speed', 'shooting', 'passing', 'defending', 'physical', 'mental'];
+
   constructor() {
     this.profileId = this.params.snapshot.paramMap.get('profileId');
-    this.createProfileForm = this.buildForm();
+    this.profileForm = this.buildForm();
     effect(() => {
       const player = this.playerService.currentPlayerSig();
       if (player) {
-        this.createProfileForm.patchValue({
+        this.profileForm.patchValue({
           fullName: player.fullName ?? null,
           displayName: player.displayName ?? null,
           location: player.location ?? null,
@@ -91,18 +99,12 @@ export class CreateProfileComponent {
             mental: player.skills?.mental ?? null,
           },
         });
+        if (player.photoUrl) {
+          this.previewUrl.set(player.photoUrl);
+        }
       }
     });
   }
-
-  skillsList = [
-    'speed',
-    'shooting',
-    'passing',
-    'defending',
-    'physical',
-    'mental',
-  ];
 
   ngOnInit() {
     this.isLoading = false;
@@ -128,10 +130,52 @@ export class CreateProfileComponent {
     }) as ProfileForm;
   }
 
+  onFileSelected(event: Event) {
+    const file = (event.target as HTMLInputElement).files?.[0];
+    if (!file) return;
+
+    this.previewUrl.set(URL.createObjectURL(file));
+    this.isUploading.set(true);
+    this.uploadProgress.set(0);
+
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('upload_preset', environment.cloudinary.uploadPreset);
+
+    const xhr = new XMLHttpRequest();
+    const { cloudName } = environment.cloudinary;
+
+    xhr.upload.addEventListener('progress', (e) => {
+      if (e.lengthComputable) {
+        this.uploadProgress.set(Math.round((e.loaded / e.total) * 100));
+      }
+    });
+
+    xhr.addEventListener('load', () => {
+      if (xhr.status === 200) {
+        const response = JSON.parse(xhr.responseText);
+        this.profileForm.patchValue({ photoUrl: response.secure_url });
+        this.previewUrl.set(response.secure_url);
+      } else {
+        console.error('Upload failed', xhr.responseText);
+      }
+      this.isUploading.set(false);
+      this.uploadProgress.set(null);
+    });
+
+    xhr.addEventListener('error', () => {
+      console.error('Upload error');
+      this.isUploading.set(false);
+      this.uploadProgress.set(null);
+    });
+
+    xhr.open('POST', `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`);
+    xhr.send(formData);
+  }
+
   onSubmit() {
-    if (!this.profileId) return;
-    const playerProfile =
-      this.createProfileForm.getRawValue() as PlayerProfileInterface;
+    if (!this.profileId || this.isUploading()) return;
+    const playerProfile = this.profileForm.getRawValue() as PlayerProfileInterface;
     this.playerService.savePlayer(this.profileId, playerProfile).subscribe({
       next: () => this.router.navigateByUrl('/dashboard'),
       error: (err) => console.log(`${err}`),
