@@ -2,6 +2,7 @@ import { Component, Input, OnInit, inject, input, signal } from '@angular/core';
 import { CardComponent } from '../card/card.component';
 import { Router } from '@angular/router';
 import { PlayerProfileInterface } from '../../interfaces/play-profile.interface';
+import { CommonModule } from '@angular/common';
 
 export type Player = {
   transport: string;
@@ -23,7 +24,7 @@ export type Player = {
 
 @Component({
   selector: 'app-profile-panel',
-  imports: [CardComponent],
+  imports: [CardComponent, CommonModule],
   templateUrl: './profile-panel.component.html',
   styleUrl: './profile-panel.component.css',
   standalone: true,
