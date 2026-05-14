@@ -1,5 +1,5 @@
 import { Component, computed, inject } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { MatchService } from '../../services/match.service';
 import { CardComponent } from '../../components/card/card.component';
 import { toSignal } from '@angular/core/rxjs-interop';
@@ -15,9 +15,23 @@ import { Auth } from '@angular/fire/auth';
 })
 export class MatchDetailsComponent {
   route = inject(ActivatedRoute);
+  router = inject(Router);
   matchService = inject(MatchService);
   playerService = inject(PlayerService);
   auth = inject(Auth);
+  matchId = toSignal(
+    this.route.paramMap.pipe(switchMap((params) => of(params.get('id')))),
+  );
+
+  isExistingMatch = computed(() => !!this.matchId());
+
+  canEdit = computed(
+    () =>
+      this.isExistingMatch() &&
+      this.auth.currentUser?.uid ===
+        this.matchService.matches().find((m) => m.id === this.matchId())
+          ?.organiserId,
+  );
 
   match = toSignal(
     this.route.paramMap.pipe(
@@ -26,12 +40,6 @@ export class MatchDetailsComponent {
         return id ? this.matchService.getMatchById(id) : of(null);
       }),
     ),
-  );
-  // isOrganizer = this.playerService.currentPlayerSig()?.isOrganiser || false;
-  isOganizer = computed(
-    () =>
-      !!this.match() &&
-      this.auth.currentUser?.uid === this.match()!.organiserId,
   );
 
   hasJoined = computed(
@@ -46,5 +54,9 @@ export class MatchDetailsComponent {
       month: 'short',
       year: 'numeric',
     });
+  }
+
+  editMatch() {
+    this.router.navigate(['/match', this.matchId(), 'edit']);
   }
 }
