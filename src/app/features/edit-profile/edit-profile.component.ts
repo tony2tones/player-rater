@@ -229,7 +229,13 @@ export class EditProfileComponent {
       this.profileForm.getRawValue() as PlayerProfileInterface;
     playerProfile.isOrganiser = this.isOrganiser();
     this.playerService.savePlayer(this.profileId, playerProfile).subscribe({
-      next: () => this.router.navigateByUrl('/dashboard'),
+      next: () => {
+        const current = this.playerService.currentPlayerSig();
+        if (current) {
+          this.playerService.currentPlayerSig.set({ ...current, ...playerProfile });
+        }
+        this.router.navigateByUrl('/dashboard');
+      },
       error: (err) => console.log(`${err}`),
     });
   }

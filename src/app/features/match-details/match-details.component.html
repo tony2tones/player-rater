@@ -1,0 +1,26 @@
+@if (match()) {
+  <app-card>
+    <h1 class="text-xl font-bold mb-4">Match Details</h1>
+    <div class="flex flex-col gap-2">
+      <p><span class="font-semibold">Date:</span> {{ formatDate(match()!.date) }}</p>
+      <p><span class="font-semibold">Location:</span> {{ match()!.location }}</p>
+      <p><span class="font-semibold">Players:</span> {{ match()!.playerIds.length }}</p>
+      @if(isOganizer()) {
+    <button class="rounded-2xl p-2.5">Edit</button>
+  }
+  @if(!isOganizer() && !hasJoined()) {
+    <button class="rounded-2xl p-2.5">Join</button>
+  }
+  @if(!isOganizer() && hasJoined()) {
+    <p class="text-sm text-slate-500">You're in this match</p>
+  }
+      @if (match()!.result) {
+        <p><span class="font-semibold">Result:</span> {{ match()!.result }}</p>
+      }
+    </div>
+
+
+  </app-card>
+} @else {
+  <p>Loading match...</p>
+}

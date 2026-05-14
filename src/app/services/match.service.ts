@@ -7,6 +7,7 @@ import {
   docData,
   doc,
   addDoc,
+  updateDoc,
 } from '@angular/fire/firestore';
 import { from, Observable } from 'rxjs';
 import { MatchInterface } from '../interfaces/match.interface';
@@ -32,5 +33,10 @@ export class MatchService {
   // addDoc lets Firestore generate the document ID automatically
   createMatch(match: MatchInterface): Observable<void> {
     return from(addDoc(this.matchCollection, match).then(() => void 0));
+  }
+
+  updateMatch(id: string, payload: Partial<MatchInterface>): Observable<void> {
+    const docRef = doc(this.fireStore, `matches/${id}`);
+    return from(updateDoc(docRef, { ...payload }).then(() => void 0));
   }
 }

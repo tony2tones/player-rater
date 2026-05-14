@@ -18,6 +18,7 @@ export class LoginComponent {
   auth = inject(AuthService);
   router = inject(Router);
   store = inject(Store);
+  isLoading = false;
 
   loginForm = this.fb.group({
     email: ['', Validators.email],
@@ -26,19 +27,20 @@ export class LoginComponent {
 
   onSubmit() {
     const { email, password } = this.loginForm.getRawValue();
+    this.isLoading = true;
     // reference to not using NgRx
     // this.auth
     //   .login(rawForm.email as string, rawForm.password as string)
     //   .subscribe(() => {
     //     this.router.navigate(['/']);
     //   });
-    console.log(email, password);
     this.store.dispatch(
       AuthActions.loginRequest({
         email: email as string,
         password: password as string,
       }),
     );
+    this.isLoading = false;
   }
 
   get email() {

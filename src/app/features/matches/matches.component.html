@@ -17,9 +17,9 @@
     }
 
     @for(match of filteredMatches(); track match.id) {
-      <div class="bg-white rounded-2xl shadow-md p-5 space-y-3">
+      <div class="bg-white rounded-2xl shadow-md p-5 space-y-3" >
 
-        <div class="flex justify-between items-start">
+        <div class="flex justify-between items-start" (click)="goToMatchDetails(match.id ? match.id : '')" style="cursor: pointer;">
           <div>
             <p class="text-sm font-semibold text-slate-800">{{ match.location }}</p>
             <p class="text-xs text-slate-400">{{ formatDate(match.date) }}</p>

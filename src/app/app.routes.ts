@@ -40,6 +40,14 @@ export const routes: Routes = [
     canActivate: [AuthGuardService],
   },
   {
+    path: 'match/:id',
+    loadComponent: () =>
+      import('./features/match-details/match-details.component').then(
+        (m) => m.MatchDetailsComponent,
+      ),
+    canActivate: [AuthGuardService],
+  },
+  {
     path: 'player-profile/:profileId',
     loadComponent: () =>
       import('./features/player-profile/player-profile.component').then(

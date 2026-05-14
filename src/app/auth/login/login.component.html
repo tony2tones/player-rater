@@ -31,7 +31,9 @@
       <ng-content> {{password?.hasError('required') ? 'Password is required' : ''}}</ng-content>
     }
   </div>
-  <button type="submit" (click)="onSubmit()">Login</button>
+  <button type="submit" (click)="onSubmit()" [disabled]="isLoading">
+    {{ isLoading ? 'Logging in...' : 'Login' }}
+  </button>
 
   </form>
 </section>
