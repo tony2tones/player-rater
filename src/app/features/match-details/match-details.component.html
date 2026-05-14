@@ -5,13 +5,14 @@
       <p><span class="font-semibold">Date:</span> {{ formatDate(match()!.date) }}</p>
       <p><span class="font-semibold">Location:</span> {{ match()!.location }}</p>
       <p><span class="font-semibold">Players:</span> {{ match()!.playerIds.length }}</p>
-      @if(isOganizer()) {
-    <button class="rounded-2xl p-2.5">Edit</button>
+      @if(canEdit()) {
+    <button (click)="editMatch()" class="rounded-2xl p-2.5">Edit</button>
   }
-  @if(!isOganizer() && !hasJoined()) {
+   <h1>{{ isExistingMatch() ? 'Edit Match' : 'Create Match' }}</h1>
+  @if(!canEdit() && !hasJoined()) {
     <button class="rounded-2xl p-2.5">Join</button>
   }
-  @if(!isOganizer() && hasJoined()) {
+  @if(!canEdit() && hasJoined()) {
     <p class="text-sm text-slate-500">You're in this match</p>
   }
       @if (match()!.result) {

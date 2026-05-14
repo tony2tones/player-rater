@@ -32,6 +32,14 @@ export const routes: Routes = [
     canActivate: [AuthGuardService],
   },
   {
+    path: 'match/:id',
+    loadComponent: () =>
+      import('./features/match-details/match-details.component').then(
+        (m) => m.MatchDetailsComponent,
+      ),
+    canActivate: [AuthGuardService],
+  },
+  {
     path: 'create-match',
     loadComponent: () =>
       import('./features/create-match/create-match.component').then(
@@ -40,10 +48,10 @@ export const routes: Routes = [
     canActivate: [AuthGuardService],
   },
   {
-    path: 'match/:id',
+    path: 'match/:id/edit',
     loadComponent: () =>
-      import('./features/match-details/match-details.component').then(
-        (m) => m.MatchDetailsComponent,
+      import('./features/create-match/create-match.component').then(
+        (m) => m.CreateMatchComponent,
       ),
     canActivate: [AuthGuardService],
   },
