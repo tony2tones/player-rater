@@ -9,10 +9,11 @@ import {
   ProfilePanelComponent,
 } from '../../components/profile-panel/profile-panel.component';
 import { PlayerProfileInterface } from '../../interfaces/play-profile.interface';
+import { ProfileSummaryComponent } from '../../components/profile-summary/profile-summary.component';
 
 @Component({
   selector: 'app-dashboard',
-  imports: [CardComponent, ProfilePanelComponent, CommonModule],
+  imports: [ProfilePanelComponent, CommonModule, ProfileSummaryComponent],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css',
 })

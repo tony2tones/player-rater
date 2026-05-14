@@ -21,6 +21,8 @@ type ProfileForm = FormGroup<{
   photoUrl: FormControl<string | null>;
   transport: FormControl<string | null>;
   isOrganiser: FormControl<boolean | null>;
+  ageRange: FormControl<string | null>;
+  availableForLeague: FormControl<boolean | null>;
   skills: FormGroup<{
     speed: FormControl<number | null>;
     shooting: FormControl<number | null>;
@@ -28,6 +30,10 @@ type ProfileForm = FormGroup<{
     defending: FormControl<number | null>;
     physical: FormControl<number | null>;
     mental: FormControl<number | null>;
+    dribbling: FormControl<number | null>;
+    goalkeeper: FormControl<number | null>;
+    vision: FormControl<number | null>;
+    playmaking: FormControl<number | null>;
   }>;
 }>;
 
@@ -73,14 +79,20 @@ export class EditProfileComponent {
     { roleId: 3, roleName: 'Forward' },
   ];
 
+  ageRangeOptions = [
+    { value: '20s', label: '20s' },
+    { value: '30s', label: '30s' },
+    { value: '40s', label: '40s' },
+    { value: '50s+', label: '50s+' },
+  ];
+
   ratingOptions = [
-    { value: 1, label: '1 - Poor' },
-    { value: 2, label: '2 - Below Average' },
-    { value: 3, label: '3 - Average' },
-    { value: 4, label: '4 - Above Average' },
-    { value: 5, label: '5 - Good' },
-    { value: 6, label: '6 - Very Good' },
-    { value: 7, label: '7 - Excellent' },
+    { value: 1, label: 'Beginner' },
+    { value: 2, label: 'Novice' },
+    { value: 3, label: 'Intermediate' },
+    { value: 4, label: 'Semi-Pro' },
+    { value: 5, label: 'Veteran' },
+    { value: 6, label: 'Pro' },
   ];
 
   skillsList = [
@@ -90,6 +102,10 @@ export class EditProfileComponent {
     'defending',
     'physical',
     'mental',
+    'dribbling',
+    'goalkeeper',
+    'vision',
+    'playmaking',
   ];
 
   constructor() {
@@ -107,6 +123,8 @@ export class EditProfileComponent {
           photoUrl: player.photoUrl ?? null,
           transport: player.transport ?? null,
           isOrganiser: player.isOrganiser ?? null,
+          ageRange: player.ageRange ?? null,
+          availableForLeague: player.availableForLeague ?? null,
           skills: {
             speed: player.skills?.speed ?? null,
             shooting: player.skills?.shooting ?? null,
@@ -114,6 +132,10 @@ export class EditProfileComponent {
             defending: player.skills?.defending ?? null,
             physical: player.skills?.physical ?? null,
             mental: player.skills?.mental ?? null,
+            dribbling: player.skills?.dribbling ?? null,
+            goalkeeper: player.skills?.goalkeeper ?? null,
+            vision: player.skills?.vision ?? null,
+            playmaking: player.skills?.playmaking ?? null,
           },
         });
         if (player.photoUrl) {
@@ -138,6 +160,8 @@ export class EditProfileComponent {
       photoUrl: new FormControl<string | null>(null),
       transport: new FormControl<string | null>(null),
       isOrganiser: new FormControl<boolean | null>(null),
+      ageRange: new FormControl<string | null>(null),
+      availableForLeague: new FormControl<boolean | null>(null),
       skills: this.fb.group({
         speed: new FormControl<number | null>(null),
         shooting: new FormControl<number | null>(null),
@@ -145,6 +169,10 @@ export class EditProfileComponent {
         defending: new FormControl<number | null>(null),
         physical: new FormControl<number | null>(null),
         mental: new FormControl<number | null>(null),
+        dribbling: new FormControl<number | null>(null),
+        goalkeeper: new FormControl<number | null>(null),
+        vision: new FormControl<number | null>(null),
+        playmaking: new FormControl<number | null>(null),
       }),
     }) as ProfileForm;
   }
