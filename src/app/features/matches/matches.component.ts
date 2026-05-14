@@ -23,9 +23,9 @@ export class MatchesComponent {
   filteredMatches = computed(() => {
     const filter = this.locationFilter().toLowerCase().trim();
     if (!filter) return this.matchService.matches();
-    return this.matchService.matches().filter((m) =>
-      m.location.toLowerCase().includes(filter),
-    );
+    return this.matchService
+      .matches()
+      .filter((m) => m.location.toLowerCase().includes(filter));
   });
 
   getPlayerName(uid: string): string {
@@ -39,5 +39,9 @@ export class MatchesComponent {
       month: 'short',
       year: 'numeric',
     });
+  }
+
+  goToMatchDetails(matchId: string) {
+    this.router.navigate(['/match', matchId]);
   }
 }
