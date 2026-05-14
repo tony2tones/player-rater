@@ -26,7 +26,12 @@ export const playerReducer = createReducer(
   })),
   on(PlayerActions.loadPlayersSuccess, (state, { players }) => ({
     ...state,
-    players,
+    players: players.map((player) => ({
+      ...player,
+      skills: {
+        ...player.skills,
+      },
+    })),
     loading: false,
   })),
   on(PlayerActions.loadPlayersFailed, (state) => ({

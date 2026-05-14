@@ -1,12 +1,13 @@
-<app-card (click)="openPlayerProfile(player()?.id || '')">
-  <div class="flex gap-3 items-center">
+<app-card (click)="openPlayerProfile(player()?.id || '')" containerClass="hover:bg-blue-100 hover:cursor-pointer">
+  <div class="flex gap-3 items-center justify-between">
 
     <img [src]="player()?.photoUrl || '/default.png'" alt="Profile photo" class="w-32 h-32 rounded-full object-cover mb-4">
-    <div class="flex flex-col" >
+    <div class="flex flex-col justify-start m-1 flex-1/2" >
       <h1>{{player()?.displayName}}</h1>
+      <h1>{{player()?.fullName}}</h1>
       <h2>{{player()?.bio}}</h2>
       <h3>{{player()?.location}}</h3>
     </div>
-
+    <app-skill-rating [playerSkills]="playerSkills()" />
   </div>
 </app-card>

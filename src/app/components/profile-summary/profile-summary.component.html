@@ -1,0 +1,37 @@
+  <app-card containerClass="w-full flex-1 h-auto">
+    <div class="h-auto flex flex-col justify-between">
+        <div>
+  <p>Welcome {{playerService.currentPlayerSig()?.displayName}}</p>
+  <p>what would you like to do? </p>
+
+  <h1>Your current profile</h1>
+
+  @if(playerService.currentPlayerSig()?.photoUrl) {
+    <div class="flex justify-center mb-5">
+    <img [src]="playerService.currentPlayerSig()?.photoUrl" alt="Profile photo" class="w-32 h-32 rounded-full object-cover">
+    </div>
+  }
+</div>
+<div class="flex flex-col ">
+  <h2>Display name:</h2>
+    <p>{{ playerService.currentPlayerSig()?.displayName }}</p>
+  <h2>Bio:</h2>
+    <p>{{playerService.currentPlayerSig()?.bio}}</p>    
+  <h2>Location:</h2>
+    <p>{{playerService.currentPlayerSig()?.location}}</p>    
+  <h2>Position: {{playerService.currentPlayerSig()?.position}}</h2>   
+  <h2>Transport: {{playerService.currentPlayerSig()?.transport}}</h2>
+  
+<!-- <div>{{playerService.currentPlayerSig()?.skills}}</div>     -->
+</div>
+
+<div class="flex flex-col gap-2 mt-4">
+  <button class="button" (click)="editProfile()">Update your profile</button>
+  <button class="button" (click)="goToMatches()">Browse Matches</button>
+  @if(playerService.currentPlayerSig()?.isOrganiser) {
+    <button class="button" (click)="goToCreateMatch()">Create Match</button>
+  }
+</div>
+
+</div>
+</app-card>

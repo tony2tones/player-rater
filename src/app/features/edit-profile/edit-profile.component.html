@@ -115,6 +115,19 @@
               >
               </ng-select>
             </div>
+            <div class="flex flex-col gap-1">
+              <label for="ageRange" class="text-sm font-medium text-slate-700">Age Range</label>
+              <ng-select
+                id="ageRange"
+                formControlName="ageRange"
+                [items]="ageRangeOptions"
+                bindLabel="label"
+                bindValue="value"
+                [clearable]="false"
+                class="text-sm"
+              ></ng-select>
+            </div>
+
             <!-- Organiser toggle — outside the grid so it spans full width -->
             <div class="col-span-full flex items-center justify-between rounded-xl border border-slate-200 px-4 py-3">
               <div>
@@ -135,7 +148,26 @@
                 ></span>
               </button>
             </div>
-          </div>
+            <div class="col-span-full flex items-center justify-between rounded-xl border border-slate-200 px-4 py-3">
+              <div>
+                <p class="text-sm font-medium text-slate-700">Available for League</p>
+                <p class="text-xs text-slate-400">Open to joining a league game if a team needs a player</p>
+              </div>
+              <button
+                type="button"
+                (click)="profileForm.patchValue({ availableForLeague: !profileForm.value.availableForLeague })"
+                class="relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-200"
+                [class.bg-slate-800]="profileForm.value.availableForLeague"
+                [class.bg-slate-300]="!profileForm.value.availableForLeague"
+              >
+                <span
+                  class="inline-block h-4 w-4 transform rounded-full bg-white shadow transition-transform duration-200"
+                  [class.translate-x-6]="profileForm.value.availableForLeague"
+                  [class.translate-x-1]="!profileForm.value.availableForLeague"
+                ></span>
+              </button>
+            </div>
+        </div>
         </div>
 
         <!-- Skills -->
