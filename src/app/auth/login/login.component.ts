@@ -40,7 +40,6 @@ export class LoginComponent {
         password: password as string,
       }),
     );
-    this.isLoading = false;
   }
 
   get email() {
