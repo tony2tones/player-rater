@@ -1,6 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { NotificationsComponent } from '../notifications/notifications.component';
+import { PlayerService } from '../../services/player-service.service';
 
 @Component({
   selector: 'app-navbar',
@@ -10,6 +11,7 @@ import { NotificationsComponent } from '../notifications/notifications.component
 })
 export class NavbarComponent {
   router = inject(Router);
+  currentPlayerSig = inject(PlayerService).currentPlayerSig();
 
   get isAuthPage(): boolean {
     return this.router.url.startsWith('/auth/');

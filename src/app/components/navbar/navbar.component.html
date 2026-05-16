@@ -4,6 +4,11 @@
       <a class="hover:text-slate-400 transition" routerLink="/auth/login">Login</a>
       <a class="hover:text-slate-400 transition" routerLink="/auth/register">Register</a>
     }
+     @if (!isAuthPage) {
+      <a class="hover:text-slate-400 transition" routerLink="/dashboard">Dashboard</a>
+      <a class="hover:text-slate-400 transition" [routerLink]="['/edit-profile', currentPlayerSig?.id]">Update profile</a>
+      <a class="hover:text-slate-400 transition" routerLink="/matches">Matches</a>
+    }
   </div>
   <div class="flex items-center gap-3">
     @if (!isAuthPage) {

@@ -1,13 +1,9 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { Auth } from '@angular/fire/auth';
 import { Router } from '@angular/router';
-import { CardComponent } from '../../components/card/card.component';
 import { PlayerService } from '../../services/player-service.service';
 import { CommonModule } from '@angular/common';
-import {
-  Player,
-  ProfilePanelComponent,
-} from '../../components/profile-panel/profile-panel.component';
+import { ProfilePanelComponent } from '../../components/profile-panel/profile-panel.component';
 import { PlayerProfileInterface } from '../../interfaces/play-profile.interface';
 import { ProfileSummaryComponent } from '../../components/profile-summary/profile-summary.component';
 
