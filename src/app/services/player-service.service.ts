@@ -1,4 +1,4 @@
-import { inject, Injectable, signal } from '@angular/core';
+import { computed, inject, Injectable } from '@angular/core';
 import {
   Firestore,
   collection,
@@ -7,8 +7,9 @@ import {
   doc,
   setDoc,
 } from '@angular/fire/firestore';
+import { Auth, authState } from '@angular/fire/auth';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { from, Observable } from 'rxjs';
+import { from, map, Observable } from 'rxjs';
 import { PlayerProfileInterface } from '../interfaces/play-profile.interface';
 
 @Injectable({
@@ -16,12 +17,27 @@ import { PlayerProfileInterface } from '../interfaces/play-profile.interface';
 })
 export class PlayerService {
   fireStore = inject(Firestore);
+  private auth = inject(Auth);
+
   playerCollection = collection(this.fireStore, 'players');
-  currentPlayerSig = signal<PlayerProfileInterface | null>(null);
+
   players = toSignal(
     collectionData(this.playerCollection, { idField: 'id' }) as Observable<PlayerProfileInterface[]>,
     { initialValue: [] as PlayerProfileInterface[] }
   );
+
+  // Derives the current user's profile from the live players collection.
+  // Stays in sync with Firestore automatically — no manual .set() needed.
+  private currentUid = toSignal(
+    authState(this.auth).pipe(map((user) => user?.uid ?? null)),
+    { initialValue: null },
+  );
+
+  currentPlayerSig = computed<PlayerProfileInterface | null>(() => {
+    const uid = this.currentUid();
+    if (!uid) return null;
+    return this.players().find((p) => p.id === uid) ?? null;
+  });
 
   getPlayers(): Observable<PlayerProfileInterface[]> {
     return collectionData(this.playerCollection, {
