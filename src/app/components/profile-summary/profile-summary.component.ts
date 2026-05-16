@@ -15,8 +15,6 @@ export class ProfileSummaryComponent {
   firebaseAuth = inject(Auth);
   router = inject(Router);
 
-  playerProfile = this.playerService.currentPlayerSig();
-
   editProfile() {
     this.router.navigate([
       `/edit-profile/${this.firebaseAuth.currentUser?.uid}`,
