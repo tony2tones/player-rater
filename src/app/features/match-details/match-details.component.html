@@ -1,26 +1,91 @@
 @if (match()) {
   <app-card>
     <h1 class="text-xl font-bold mb-4">Match Details</h1>
-    <div class="flex flex-col gap-2">
+    <div class="flex flex-col gap-3">
+
       <p><span class="font-semibold">Date:</span> {{ formatDate(match()!.date) }}</p>
       <p><span class="font-semibold">Location:</span> {{ match()!.location }}</p>
       <p><span class="font-semibold">Players:</span> {{ match()!.playerIds.length }}</p>
-      @if(canEdit()) {
-    <button (click)="editMatch()" class="rounded-2xl p-2.5">Edit</button>
-  }
-   <h1>{{ isExistingMatch() ? 'Edit Match' : 'Create Match' }}</h1>
-  @if(!canEdit() && !hasJoined()) {
-    <button class="rounded-2xl p-2.5">Join</button>
-  }
-  @if(!canEdit() && hasJoined()) {
-    <p class="text-sm text-slate-500">You're in this match</p>
-  }
+
       @if (match()!.result) {
         <p><span class="font-semibold">Result:</span> {{ match()!.result }}</p>
       }
+
+      <!-- ── Organiser view ── -->
+      @if (canEdit()) {
+        <button
+          (click)="editMatch()"
+          class="mt-2 rounded-xl bg-slate-800 text-white text-sm font-semibold px-4 py-2 hover:bg-slate-900 transition w-fit"
+        >
+          Edit Match
+        </button>
+
+        @if (requesters().length > 0) {
+          <div class="mt-3 rounded-xl border border-amber-200 bg-amber-50 p-4 space-y-3">
+            <p class="text-sm font-semibold text-amber-800">Join Requests ({{ requesters().length }})</p>
+            @for (player of requesters(); track player.id) {
+              <div class="flex items-center justify-between">
+                <span class="text-sm text-slate-700">{{ player.displayName }}</span>
+                <div class="flex gap-2">
+                  <button
+                    (click)="approveRequest(player.id!)"
+                    class="rounded-lg bg-slate-800 text-white text-xs font-semibold px-3 py-1.5 hover:bg-slate-900 transition"
+                  >
+                    Approve
+                  </button>
+                  <button
+                    (click)="denyRequest(player.id!)"
+                    class="rounded-lg border border-slate-300 text-slate-600 text-xs font-semibold px-3 py-1.5 hover:bg-slate-100 transition"
+                  >
+                    Deny
+                  </button>
+                </div>
+              </div>
+            }
+          </div>
+        }
+      }
+
+      <!-- ── Player view ── -->
+      @if (!canEdit()) {
+        @if (hasJoined()) {
+          <p class="text-sm font-medium text-green-600">You're in this match</p>
+        } @else if (myInvite()?.status === 'pending') {
+          <div class="mt-2 rounded-xl border border-slate-200 bg-slate-50 p-4 space-y-3">
+            <p class="text-sm font-medium text-slate-700">You've been invited to this match</p>
+            <div class="flex gap-2">
+              <button
+                (click)="acceptInvite()"
+                class="flex-1 rounded-lg bg-slate-800 text-white text-sm font-semibold py-2 hover:bg-slate-900 transition"
+              >
+                Accept
+              </button>
+              <button
+                (click)="declineInvite()"
+                class="flex-1 rounded-lg border border-slate-300 text-slate-600 text-sm font-semibold py-2 hover:bg-slate-100 transition"
+              >
+                Decline
+              </button>
+            </div>
+          </div>
+        } @else if (myInvite()?.status === 'declined') {
+          <p class="text-sm text-slate-400">You declined this invite</p>
+        } @else if (myInvite()?.status === 'accepted') {
+          <!-- hasJoined should cover this, but handles brief propagation delay -->
+          <p class="text-sm font-medium text-green-600">You're in this match</p>
+        } @else if (hasRequested()) {
+          <p class="text-sm text-slate-500 italic">Request pending — waiting for the organiser to approve</p>
+        } @else {
+          <button
+            (click)="requestToJoin()"
+            class="mt-2 rounded-xl border border-slate-700 text-slate-700 text-sm font-semibold px-4 py-2 hover:bg-slate-100 transition w-fit"
+          >
+            Request to Join
+          </button>
+        }
+      }
+
     </div>
-
-
   </app-card>
 } @else {
   <p>Loading match...</p>

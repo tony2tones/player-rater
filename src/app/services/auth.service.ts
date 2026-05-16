@@ -1,9 +1,4 @@
-import {
-  inject,
-  Injectable,
-  Injector,
-  runInInjectionContext,
-} from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Firestore, doc, getDoc, setDoc } from '@angular/fire/firestore';
 import {
   Auth,
@@ -13,7 +8,6 @@ import {
 } from '@angular/fire/auth';
 import { Router } from '@angular/router';
 import { BehaviorSubject, from, Observable, of } from 'rxjs';
-import { PlayerService } from './player-service.service';
 
 @Injectable({
   providedIn: 'root',
@@ -22,23 +16,12 @@ export class AuthService {
   firebaseAuth = inject(Auth);
   firestore = inject(Firestore);
   router = inject(Router);
-  playerService = inject(PlayerService);
-  injector = inject(Injector);
 
   private isLoggedInSubject = new BehaviorSubject<boolean | null>(null);
 
   constructor() {
     this.firebaseAuth.onAuthStateChanged((user) => {
       this.isLoggedInSubject.next(!!user);
-      if (user) {
-        runInInjectionContext(this.injector, () => {
-          this.playerService.getPlayerById(user.uid).subscribe((player) => {
-            this.playerService.currentPlayerSig.set(player);
-          });
-        });
-      } else {
-        this.playerService.currentPlayerSig.set(null);
-      }
     });
   }
 
@@ -47,22 +30,13 @@ export class AuthService {
     return from(getDoc(usernameDoc).then((snapShot) => snapShot.exists()));
   }
 
-  register(
-    email: string,
-    username: string,
-    password: string,
-  ): Observable<void> {
-    const promise = createUserWithEmailAndPassword(
-      this.firebaseAuth,
-      email,
-      password,
-    ).then((response) => {
-      return updateProfile(response.user, { displayName: username }).then(() =>
-        setDoc(doc(this.firestore, `usernames/${username}`), {
-          uid: response.user.uid,
-        }),
-      );
-    });
+  register(email: string, username: string, password: string): Observable<void> {
+    const promise = createUserWithEmailAndPassword(this.firebaseAuth, email, password).then(
+      (response) =>
+        updateProfile(response.user, { displayName: username }).then(() =>
+          setDoc(doc(this.firestore, `usernames/${username}`), { uid: response.user.uid }),
+        ),
+    );
     return from(promise);
   }
 
@@ -71,6 +45,7 @@ export class AuthService {
     this.isLoggedInSubject.next(false);
     this.router.navigate(['/auth/login']);
   };
+
   isLoggedIn(): Observable<boolean | null> {
     return this.isLoggedInSubject.asObservable();
   }
