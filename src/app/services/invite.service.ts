@@ -32,15 +32,17 @@ export class InviteService {
           this.inviteCollection,
           where('toUserId', '==', user.uid),
         );
-        return collectionData(q, { idField: 'id' }) as Observable<InviteInterface[]>;
+        return collectionData(q, { idField: 'id' }) as Observable<
+          InviteInterface[]
+        >;
       }),
     ),
     { initialValue: [] as InviteInterface[] },
   );
 
   // Badge count — only pending invites need user action
-  pendingCount = computed(() =>
-    this.allInvites().filter((i) => i.status === 'pending').length,
+  pendingCount = computed(
+    () => this.allInvites().filter((i) => i.status === 'pending').length,
   );
 
   // Real-time observable of the current user's invite for a specific match.
@@ -49,7 +51,9 @@ export class InviteService {
     const uid = this.auth.currentUser?.uid;
     if (!uid) return of(undefined);
     const ref = doc(this.fireStore, `invites/${matchId}_${uid}`);
-    return docData(ref, { idField: 'id' }) as Observable<InviteInterface | undefined>;
+    return docData(ref, { idField: 'id' }) as Observable<
+      InviteInterface | undefined
+    >;
   }
 
   // Creates invite documents only if one does not already exist for that match+player pair

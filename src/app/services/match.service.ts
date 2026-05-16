@@ -20,7 +20,9 @@ export class MatchService {
   matchCollection = collection(this.fireStore, 'matches');
 
   matches = toSignal(
-    collectionData(this.matchCollection, { idField: 'id' }) as Observable<MatchInterface[]>,
+    collectionData(this.matchCollection, { idField: 'id' }) as Observable<
+      MatchInterface[]
+    >,
     { initialValue: [] as MatchInterface[] },
   );
 
@@ -41,7 +43,9 @@ export class MatchService {
 
   requestToJoin(matchId: string, userId: string): Observable<void> {
     const docRef = doc(this.fireStore, `matches/${matchId}`);
-    return from(updateDoc(docRef, { requestIds: arrayUnion(userId) }).then(() => void 0));
+    return from(
+      updateDoc(docRef, { requestIds: arrayUnion(userId) }).then(() => void 0),
+    );
   }
 
   approveJoinRequest(matchId: string, userId: string): Observable<void> {
@@ -56,6 +60,8 @@ export class MatchService {
 
   denyJoinRequest(matchId: string, userId: string): Observable<void> {
     const docRef = doc(this.fireStore, `matches/${matchId}`);
-    return from(updateDoc(docRef, { requestIds: arrayRemove(userId) }).then(() => void 0));
+    return from(
+      updateDoc(docRef, { requestIds: arrayRemove(userId) }).then(() => void 0),
+    );
   }
 }

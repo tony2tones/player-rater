@@ -23,7 +23,9 @@ export class PlayerService {
 
   // Live signal — auto-updates when the players collection changes
   players = toSignal(
-    collectionData(this.playerCollection, { idField: 'id' }) as Observable<PlayerProfileInterface[]>,
+    collectionData(this.playerCollection, { idField: 'id' }) as Observable<
+      PlayerProfileInterface[]
+    >,
     { initialValue: [] as PlayerProfileInterface[] },
   );
 
@@ -41,12 +43,16 @@ export class PlayerService {
   });
 
   getPlayers(): Observable<PlayerProfileInterface[]> {
-    return collectionData(this.playerCollection, { idField: 'id' }) as Observable<PlayerProfileInterface[]>;
+    return collectionData(this.playerCollection, {
+      idField: 'id',
+    }) as Observable<PlayerProfileInterface[]>;
   }
 
   getPlayerById(id: string): Observable<PlayerProfileInterface> {
     const docRef = doc(this.fireStore, `players/${id}`);
-    return docData(docRef, { idField: 'id' }) as Observable<PlayerProfileInterface>;
+    return docData(docRef, {
+      idField: 'id',
+    }) as Observable<PlayerProfileInterface>;
   }
 
   savePlayer(id: string, player: PlayerProfileInterface): Observable<void> {

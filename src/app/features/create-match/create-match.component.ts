@@ -1,5 +1,10 @@
 import { Component, computed, effect, inject, signal } from '@angular/core';
-import { FormBuilder, FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormControl,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Auth } from '@angular/fire/auth';
 import { FormsModule } from '@angular/forms';
@@ -90,11 +95,14 @@ export class CreateMatchComponent {
   }
 
   getSelectedPlayerName(id: string): string {
-    return this.playerService.players().find((p) => p.id === id)?.displayName ?? id;
+    return (
+      this.playerService.players().find((p) => p.id === id)?.displayName ?? id
+    );
   }
 
   onSubmit() {
-    const { date, location, result, manOfTheMatchId } = this.matchForm.getRawValue();
+    const { date, location, result, manOfTheMatchId } =
+      this.matchForm.getRawValue();
     const organiserId = this.auth.currentUser?.uid;
     if (!date || !location || !organiserId) return;
 
@@ -115,7 +123,9 @@ export class CreateMatchComponent {
     organiserId: string,
   ) {
     // Organiser is confirmed immediately; all other selected players receive an invite
-    const toInvite = this.selectedPlayerIds().filter((id) => id !== organiserId);
+    const toInvite = this.selectedPlayerIds().filter(
+      (id) => id !== organiserId,
+    );
 
     const payload: MatchInterface = {
       date,
@@ -133,13 +143,15 @@ export class CreateMatchComponent {
           this.router.navigateByUrl('/matches');
           return;
         }
-        this.inviteService.sendInvites(matchId, date, location, organiserId, toInvite).subscribe({
-          next: () => this.router.navigateByUrl('/matches'),
-          error: (err) => {
-            console.error(err);
-            this.isSubmitting.set(false);
-          },
-        });
+        this.inviteService
+          .sendInvites(matchId, date, location, organiserId, toInvite)
+          .subscribe({
+            next: () => this.router.navigateByUrl('/matches'),
+            error: (err) => {
+              console.error(err);
+              this.isSubmitting.set(false);
+            },
+          });
       },
       error: (err) => {
         console.error(err);

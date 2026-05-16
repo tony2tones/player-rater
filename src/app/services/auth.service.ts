@@ -3,7 +3,6 @@ import { Firestore, doc, getDoc, setDoc } from '@angular/fire/firestore';
 import {
   Auth,
   createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
   updateProfile,
 } from '@angular/fire/auth';
 import { Router } from '@angular/router';
@@ -16,7 +15,6 @@ export class AuthService {
   firebaseAuth = inject(Auth);
   firestore = inject(Firestore);
   router = inject(Router);
-
   private isLoggedInSubject = new BehaviorSubject<boolean | null>(null);
 
   constructor() {
@@ -30,12 +28,21 @@ export class AuthService {
     return from(getDoc(usernameDoc).then((snapShot) => snapShot.exists()));
   }
 
-  register(email: string, username: string, password: string): Observable<void> {
-    const promise = createUserWithEmailAndPassword(this.firebaseAuth, email, password).then(
-      (response) =>
-        updateProfile(response.user, { displayName: username }).then(() =>
-          setDoc(doc(this.firestore, `usernames/${username}`), { uid: response.user.uid }),
-        ),
+  register(
+    email: string,
+    username: string,
+    password: string,
+  ): Observable<void> {
+    const promise = createUserWithEmailAndPassword(
+      this.firebaseAuth,
+      email,
+      password,
+    ).then((response) =>
+      updateProfile(response.user, { displayName: username }).then(() =>
+        setDoc(doc(this.firestore, `usernames/${username}`), {
+          uid: response.user.uid,
+        }),
+      ),
     );
     return from(promise);
   }

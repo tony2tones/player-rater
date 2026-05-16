@@ -50,7 +50,8 @@ export class MatchDetailsComponent {
     () =>
       !!this.matchId() &&
       this.auth.currentUser?.uid ===
-        this.matchService.matches().find((m) => m.id === this.matchId())?.organiserId,
+        this.matchService.matches().find((m) => m.id === this.matchId())
+          ?.organiserId,
   );
 
   hasJoined = computed(
@@ -62,7 +63,9 @@ export class MatchDetailsComponent {
   hasRequested = computed(
     () =>
       !!this.match() &&
-      (this.match()!.requestIds ?? []).includes(this.auth.currentUser?.uid ?? ''),
+      (this.match()!.requestIds ?? []).includes(
+        this.auth.currentUser?.uid ?? '',
+      ),
   );
 
   // Resolves requestIds to full player profiles so the organiser sees names

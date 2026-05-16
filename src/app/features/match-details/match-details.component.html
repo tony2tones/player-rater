@@ -2,7 +2,6 @@
   <app-card>
     <h1 class="text-xl font-bold mb-4">Match Details</h1>
     <div class="flex flex-col gap-3">
-
       <p><span class="font-semibold">Date:</span> {{ formatDate(match()!.date) }}</p>
       <p><span class="font-semibold">Location:</span> {{ match()!.location }}</p>
       <p><span class="font-semibold">Players:</span> {{ match()!.playerIds.length }}</p>
@@ -84,7 +83,6 @@
           </button>
         }
       }
-
     </div>
   </app-card>
 } @else {
