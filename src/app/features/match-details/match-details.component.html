@@ -10,7 +10,7 @@
         <p><span class="font-semibold">Result:</span> {{ match()!.result }}</p>
       }
 
-      <!-- Organiser actions -->
+      <!-- ── Organiser view ── -->
       @if (canEdit()) {
         <button
           (click)="editMatch()"
@@ -19,24 +19,21 @@
           Edit Match
         </button>
 
-        <!-- Pending join requests -->
         @if (requesters().length > 0) {
           <div class="mt-3 rounded-xl border border-amber-200 bg-amber-50 p-4 space-y-3">
-            <p class="text-sm font-semibold text-amber-800">
-              Join Requests ({{ requesters().length }})
-            </p>
-            @for (player of requesters(); track player!.id) {
+            <p class="text-sm font-semibold text-amber-800">Join Requests ({{ requesters().length }})</p>
+            @for (player of requesters(); track player.id) {
               <div class="flex items-center justify-between">
-                <span class="text-sm text-slate-700">{{ player!.displayName }}</span>
+                <span class="text-sm text-slate-700">{{ player.displayName }}</span>
                 <div class="flex gap-2">
                   <button
-                    (click)="approveRequest(player!.id!)"
+                    (click)="approveRequest(player.id!)"
                     class="rounded-lg bg-slate-800 text-white text-xs font-semibold px-3 py-1.5 hover:bg-slate-900 transition"
                   >
                     Approve
                   </button>
                   <button
-                    (click)="denyRequest(player!.id!)"
+                    (click)="denyRequest(player.id!)"
                     class="rounded-lg border border-slate-300 text-slate-600 text-xs font-semibold px-3 py-1.5 hover:bg-slate-100 transition"
                   >
                     Deny
@@ -48,7 +45,7 @@
         }
       }
 
-      <!-- Player status (non-organiser) -->
+      <!-- ── Player view ── -->
       @if (!canEdit()) {
         @if (hasJoined()) {
           <p class="text-sm font-medium text-green-600">You're in this match</p>
@@ -72,12 +69,15 @@
           </div>
         } @else if (myInvite()?.status === 'declined') {
           <p class="text-sm text-slate-400">You declined this invite</p>
+        } @else if (myInvite()?.status === 'accepted') {
+          <!-- hasJoined should cover this, but handles brief propagation delay -->
+          <p class="text-sm font-medium text-green-600">You're in this match</p>
         } @else if (hasRequested()) {
-          <p class="text-sm text-slate-500">Request pending — waiting for the organiser to approve</p>
+          <p class="text-sm text-slate-500 italic">Request pending — waiting for the organiser to approve</p>
         } @else {
           <button
             (click)="requestToJoin()"
-            class="mt-2 rounded-xl border border-slate-800 text-slate-800 text-sm font-semibold px-4 py-2 hover:bg-slate-100 transition w-fit"
+            class="mt-2 rounded-xl border border-slate-700 text-slate-700 text-sm font-semibold px-4 py-2 hover:bg-slate-100 transition w-fit"
           >
             Request to Join
           </button>

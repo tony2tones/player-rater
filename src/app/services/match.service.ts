@@ -19,7 +19,6 @@ export class MatchService {
   fireStore = inject(Firestore);
   matchCollection = collection(this.fireStore, 'matches');
 
-  // Live signal — auto-updates when Firestore changes, same pattern as PlayerService.players
   matches = toSignal(
     collectionData(this.matchCollection, { idField: 'id' }) as Observable<
       MatchInterface[]
@@ -32,8 +31,7 @@ export class MatchService {
     return docData(docRef, { idField: 'id' }) as Observable<MatchInterface>;
   }
 
-  // addDoc lets Firestore generate the document ID automatically; returns the new ID
-  // so callers can send invites referencing the correct matchId.
+  // Returns the new document ID so callers can send invites referencing the correct matchId
   createMatch(match: MatchInterface): Observable<string> {
     return from(addDoc(this.matchCollection, match).then((ref) => ref.id));
   }
@@ -45,7 +43,9 @@ export class MatchService {
 
   requestToJoin(matchId: string, userId: string): Observable<void> {
     const docRef = doc(this.fireStore, `matches/${matchId}`);
-    return from(updateDoc(docRef, { requestIds: arrayUnion(userId) }).then(() => void 0));
+    return from(
+      updateDoc(docRef, { requestIds: arrayUnion(userId) }).then(() => void 0),
+    );
   }
 
   approveJoinRequest(matchId: string, userId: string): Observable<void> {
@@ -60,6 +60,8 @@ export class MatchService {
 
   denyJoinRequest(matchId: string, userId: string): Observable<void> {
     const docRef = doc(this.fireStore, `matches/${matchId}`);
-    return from(updateDoc(docRef, { requestIds: arrayRemove(userId) }).then(() => void 0));
+    return from(
+      updateDoc(docRef, { requestIds: arrayRemove(userId) }).then(() => void 0),
+    );
   }
 }

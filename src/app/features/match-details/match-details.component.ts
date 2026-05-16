@@ -26,6 +26,7 @@ export class MatchDetailsComponent {
     this.route.paramMap.pipe(switchMap((params) => of(params.get('id')))),
   );
 
+  // Real-time match document
   match = toSignal(
     this.route.paramMap.pipe(
       switchMap((params) => {
@@ -35,7 +36,7 @@ export class MatchDetailsComponent {
     ),
   );
 
-  // Real-time invite status for the current user on this match
+  // Real-time invite for the current user on this match
   myInvite = toSignal(
     this.route.paramMap.pipe(
       switchMap((params) => {
@@ -62,14 +63,16 @@ export class MatchDetailsComponent {
   hasRequested = computed(
     () =>
       !!this.match() &&
-      (this.match()!.requestIds ?? []).includes(this.auth.currentUser?.uid ?? ''),
+      (this.match()!.requestIds ?? []).includes(
+        this.auth.currentUser?.uid ?? '',
+      ),
   );
 
-  // Player profiles for pending join requests (organiser view)
+  // Resolves requestIds to full player profiles so the organiser sees names
   requesters = computed(() =>
     (this.match()?.requestIds ?? [])
       .map((id) => this.playerService.players().find((p) => p.id === id))
-      .filter((p) => !!p),
+      .filter((p): p is NonNullable<typeof p> => !!p),
   );
 
   formatDate(iso: string): string {
@@ -77,6 +80,8 @@ export class MatchDetailsComponent {
       day: 'numeric',
       month: 'short',
       year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
     });
   }
 

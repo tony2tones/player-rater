@@ -3,7 +3,6 @@ import { Firestore, doc, getDoc, setDoc } from '@angular/fire/firestore';
 import {
   Auth,
   createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
   updateProfile,
 } from '@angular/fire/auth';
 import { Router } from '@angular/router';
@@ -38,13 +37,13 @@ export class AuthService {
       this.firebaseAuth,
       email,
       password,
-    ).then((response) => {
-      return updateProfile(response.user, { displayName: username }).then(() =>
+    ).then((response) =>
+      updateProfile(response.user, { displayName: username }).then(() =>
         setDoc(doc(this.firestore, `usernames/${username}`), {
           uid: response.user.uid,
         }),
-      );
-    });
+      ),
+    );
     return from(promise);
   }
 
@@ -53,6 +52,7 @@ export class AuthService {
     this.isLoggedInSubject.next(false);
     this.router.navigate(['/auth/login']);
   };
+
   isLoggedIn(): Observable<boolean | null> {
     return this.isLoggedInSubject.asObservable();
   }

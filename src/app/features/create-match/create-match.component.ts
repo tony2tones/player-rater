@@ -1,5 +1,10 @@
 import { Component, computed, effect, inject, signal } from '@angular/core';
-import { FormBuilder, FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormControl,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Auth } from '@angular/fire/auth';
 import { FormsModule } from '@angular/forms';
@@ -29,6 +34,7 @@ export class CreateMatchComponent {
 
   playerSearch = signal('');
   selectedPlayerIds = signal<string[]>([]);
+
   matchId = toSignal(
     this.activatedRoute.paramMap.pipe(map((p) => p.get('id'))),
   );
@@ -62,6 +68,7 @@ export class CreateMatchComponent {
       .filter((p) => p.location?.toLowerCase().includes(search));
   });
 
+  // date and location are required; result and manOfTheMatchId are optional
   matchForm = this.fb.group({
     date: new FormControl<string>('', Validators.required),
     location: new FormControl<string>('', Validators.required),
@@ -82,6 +89,7 @@ export class CreateMatchComponent {
     return this.selectedPlayerIds().includes(player.id!);
   }
 
+  // In edit mode, whether this player is already confirmed (in the saved playerIds)
   isConfirmed(player: PlayerProfileInterface): boolean {
     return (this.existingMatch()?.playerIds ?? []).includes(player.id!);
   }
@@ -114,8 +122,10 @@ export class CreateMatchComponent {
     manOfTheMatchId: string | null,
     organiserId: string,
   ) {
-    // Organiser is confirmed immediately; everyone else gets an invite
-    const toInvite = this.selectedPlayerIds().filter((id) => id !== organiserId);
+    // Organiser is confirmed immediately; all other selected players receive an invite
+    const toInvite = this.selectedPlayerIds().filter(
+      (id) => id !== organiserId,
+    );
 
     const payload: MatchInterface = {
       date,

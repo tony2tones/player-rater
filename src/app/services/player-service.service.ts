@@ -21,13 +21,16 @@ export class PlayerService {
 
   playerCollection = collection(this.fireStore, 'players');
 
+  // Live signal — auto-updates when the players collection changes
   players = toSignal(
-    collectionData(this.playerCollection, { idField: 'id' }) as Observable<PlayerProfileInterface[]>,
-    { initialValue: [] as PlayerProfileInterface[] }
+    collectionData(this.playerCollection, { idField: 'id' }) as Observable<
+      PlayerProfileInterface[]
+    >,
+    { initialValue: [] as PlayerProfileInterface[] },
   );
 
-  // Derives the current user's profile from the live players collection.
-  // Stays in sync with Firestore automatically — no manual .set() needed.
+  // Derives the current player profile directly from the live players signal.
+  // Stays in sync with Firestore automatically — no manual .set() needed anywhere.
   private currentUid = toSignal(
     authState(this.auth).pipe(map((user) => user?.uid ?? null)),
     { initialValue: null },
